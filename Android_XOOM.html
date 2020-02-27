@@ -1,0 +1,774 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name=Description" content="Migrating to linux">
+<title> Chris Godsalve, Android Root BusyBox adb fastboot OpenSuSe
+ rooted chroot device chroot androidVNC</title>
+
+<style type="text/css">
+@import url(cochise.css);
+</style>
+
+</head>
+<!-- Background white, links blue (unvisited), navy (visited), red
+(active) -->
+<body>
+
+<h1>  Turning an Android Tablet Into a Real Computer </h1>
+
+<p>Important corrections and additions added Sept.2014: see &#8220Changes" at the bottom of this pages.</p>
+
+<h2> <a name="conts"> Contents </h2>
+
+<ul>
+<li> <a href= "#intro"> Introduction </a></li>
+<li> <a href= "#root">Gaining Root Access or Unlocking and &#8220Rooting the Tablet"  </a></li>
+<li> <a href= "#busy">Busybox  </a></li>
+<li> <a href= "#script">A script for Busybox Symbolic Links  </a></li>
+<li> <a href= "#ramdisk">Changing the Tablets Ramdisk! Edit init.rc  </a></li>
+<li> <a href= "#chroot">Running OpenSuSe Linux on a Tablet?  Chrooting the Device  </a></li>
+<li> <a href= "#office">Latex and/or OpenOffice  </a></li>
+<li> <a href= "#stuff"> Other Stuff to Install </a></li>
+<li> <a href= "#space">No Space Left on Device?  </a></li>
+<li> <a href= "#bricked">Bricked? Unbricking an Android  </a></li>
+<li> <a href= "#useful">Some Useful Links  </a></li>
+<li> <a href= "#annoy">Some Annoyances  </a></li>
+<li> <a href= "#change">Log of changes  </a></li>
+</ul>
+
+<h1> <a name="intro"> Introduction </h1>
+
+<p>
+I am not the gadget type. If &#8220Click" comes up on the BBC, I switch the TV off. I hardly ever touch
+my mobile phone, and when I have to use it I sometimes find I have forgot how to answer it, or even how to switch it on!
+ Anyway, Philippa
+ (my daughter) asked me &#8220Why don't you get a tablet?" a few times. I thought, What on Earth would I do with one?
+But Philippa had a point. Beatrice (my wife) is a computer-phobe, but she gets on OK with phones, so maybe...
+</p>
+
+<p>
+At this point, I noticed a 10.1 inch Motorola Zoom (MZ604) tablet with a 32GB internal memory
+ in a second hand shop. It was on sale for not a great deal over a &pound100.
+ A little searching tells me that it has an Android 4.0.3 operating system (called
+ &#8220ice cream sandwich" for whatever reason). That Android is open source, and Android runs on a linux 3.x kernel for versions greater than or equal to 4.0.2 (which starts to make me interested). What is more this android version has OpenGL (Embedded System 2.0). Then, I look up the tablet's spec.  It has an NVIDIA Tegra 2 dual-core  processor with a ULP GeForce GPU and it has 1GB of RAM. I suddenly think, this is a real machine. Needless to say, this tiny beast, with a screen big enough for me to read, is now mine!
+</p>
+
+<p>
+Now what? Beatrice could use it as is, but I can't stand to see such such a powerful little thing
+ wasted on a just a few &#8220apps" as they call them. This is a real computer as far as hardware goes.
+It's not that long ago that a machine with this kind of power was well beyond anything affordable by
+an ordinary person. It is way more powerful than the kind of machine you would have found in a university
+ mathematics or physics or engineering department 20 years ago! 
+I just have to turn it from a over-powered toy into a real computer. 
+The way I am going to do this is to install a linux distribution (openSuSE) which has an android version.
+On doing so, we shall be able to have things like compilers, debuggers, latex document processing, and
+turn it into something a 1990's physical science/maths computer lab would have killed for!
+Beatrice will still be able to use it too.
+</p>
+
+<p>
+I shall post links to all the sites that I cribbed from right at the end of this article. Let's
+get started on this tiny animal. I hope that these pages will be useful to anyone wanting to do
+ the same (or a similar) thing.
+</p>
+
+<p>
+Before anything else, look out all the instructions for your tablet on the web and in the manual. You will
+need to be able to reboot the device in different ways - you shall want to be able to boot into &#8220recovery mode" and be able to
+get &#8220fastboot protocol" for instance. 
+For some tablets, you may need to stick your left big toe in your right ear, hop anticlockwise, and shout &#8220I'll Only Love Obama 'til the Cows Fly Home". (You shall see later how in later versions of Android, things are so unintuitive that this joke instruction isn't far off.)
+On the Motorola Xoom MZ604, you have to mess about with the back on/off button and the volume up and down
+buttons. Whatever you need to do, get used to it. The other thing is that <I> you must insert an external SD card into the tablet </I>.
+For the method I am using, no external SD card - no go: Period. The internal SDcard (the equivalent of a PC hard drive)
+will need <I>at least </I> 4GB if you put the large openSuSE binary file there (but this binary can go on the external SD card).
+You also need a USB (or WiFi?) connection between the tablet and the PC, otherwise - also no go.
+</p>
+
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+
+<h1> <a name="root">Gaining Root Access or &#8220Rooting the Tablet" </h1>
+<p>
+Quite understandably, the manufacturers of your tablet don't want you to ruin the thing and then
+blame them. If you buy a tablet, it is &#8220fool proofed": you just can't destroy the operating system.
+You have no access to it. For what I want to do, I need access to the operating system or &#8220root access"
+as it called. We have to &#8220create a rooted device", &#8220root the tablet", or whatever other jargon there is for it. 
+Instructions follow on how to wipe your tablet, void its warranty, or even turn it into the electronic equivalent
+ of a house brick. (Hence the terms &#8220bricked tablet", &#8220bricking your android", and so on.) Mostly, if things go wrong, it will be &#8220soft-bricked", and it can be recovered as we shall see later.
+
+Following these instructions may give your puppies anthrax for Christmas.  Seriously, things can go badly wrong (apparently). There is a risk that you might just brick your tablet. Back up any data before you start.
+I must admit, the warnings I encountered on the web left me nervous.
+</p>
+
+<p>
+The first step begins with your PC. I am running linux on my PC, so I only give linux instructions. 
+ MS windows and Mac users may have to google a bit further, but everything will be similar.
+The first thing to do is install &#8220adb". The letters stand for &#8220android debug bridge", and it's a 
+tool for android developers. In my case I downloaded a file called &#8220android-sdk-linux.tar.gz".
+On unpacking it, I moved the directory &#8220android-sdk-linux" into &#8220/usr/local".
+If you change into this directory you will see you have directory called &#8220platform tools"
+among other things. In this directory we see we have the two executable files we want to use for
+our purposes: these are &#8220adb" and &#8220fastboot". For convenience, you might want to set symbolic
+links to these in &#8220/usr/local/bin".
+</p>
+
+<p>
+Now we have two further downloads before we can root the device. The ones I used were &#8220Xoom-Universal-Root.zip" (obviously specific to motorola Xoom tablets) and &#8220recovery-Tiamat-R4c-100611-1150-cwm.img". It is called &#8220universal" as it works for ice-cream sandwich and all previous versions as well. For Android Jelly-Bean you need vesion 4 of the Universal-Root zip file, which can be downloaded from Jelly-Bean link at the end of these pages.
+
+This is a &#8220Clockworkmod recovery" image file. (This appears to be Xoom specific also --- so you shall need to google for whatever you need for other tablets - this works for Android Jelly-Bean too). As far as I am concerned, these are bits of lore torn out of some sorcerer's book of spells: all I know is that they are needed for the Xoom tablet.
+Now, switch the tablet on, and have that USB connection to the computer plugged in.
+On linux, just drag and drop that Xoom-Universal-Root file to the Xoom internal SD card using the file
+manager. (And no, <I>do not unzip it</I>.) The Tiamat image file stays where it is on your PC. (Later we see
+we can use &#8220adb push" from a terminal to copy things from the PC to the tablet.)
+</p>
+<p>
+Now for a brief visit to the tablet. Get that fiddly external SD card into it, and turn it on.
+Download and install X-plore file manager and a terminal emulator. You will shortly lose them again,
+ but they are free and quick to install. (You need to back up your tablet if it isn't new.)
+
+Move the Xoom-Universal-Root.zip file to the <I>external card</I>.
+It's easy to do with the X-plore app - which gives you a split screen for moving to and from two directories.
+Any data like this is about to get wiped off the internal card --- which is why it's got to be on the external
+card. If you try out the terminal emulator, you can see you can use UNIX commands like &#8220ls". 
+You certainly can't &#8220su" until the device is &#8220rooted". What you have is a small subset of what you
+normally see on a UNIX machine. Some things you think of as part of the UNIX command line (like cp for instance) are actually utility
+ programs, you don't have these. Also, we have cut down versions of the UNIX commands --- this is so
+ the &#8220end user" isn't able to mess things up. We shall soon change all that!
+</p>
+
+<p>
+Before leaving the tablet we have one <I> very important step </I> to make before we continue.
+Under &#8220Settings -> {} Developer Options" you will see something called &#8220USB debugging".
+<I> Make sure that box is ticked, or adb will not be able to see your tablet</I>.
+If at any later stage, you find that adb can't see the tablet, then somehow USB debugging has got
+disabled. Just go back to the tablet and re-check the USB debugging box. From the adb tutorial
+link at the end, &#8220<I>Developer options is hidden in Android 4.2 and above, Hitting Build number 10 times in
+ About Phone/Tablet reveals the menu</I>". (Now you see what I mean by sticking your left big toe...)
+At the moment, I can't see any good reason to try and upgrade my android from 4.0.3, I am going to leave it
+well alone.
+</p>
+<p>
+Now it's crunch time, and we go back to the PC. We are using a command line terminal. I am going to unlock the android tablet: <I>if you do likewise it will void your warranty</I>. Despite what you read elsewhere
+on the web, no harm shall come to your kittens just because you unlocked your tablet.
+At the command line, type
+<br/><br/>
+adb devices<br/><br/>
+All this does is to tell you what device is attached via the USB (and tell you adb is working). Now for that deep breath. Type the commands <br/><br/>
+adb reboot bootloader <br/>
+fastboot oem unlock<br/><br/>
+Accept that you are voiding the warranty, and check on your kittens. At this stage, I started up the
+android again using backbutton+VolumeUp for the Xoom. Then rechecked the settings-developer options-USB debugging. Now to root the device: going back to the PC command line
+<br/><br/>
+adb reboot bootloader  <br/>
+fastboot flash recovery recovery-Tiamat-R4c-100611-1150-cwm.img <br/> <br/>
+<I>That last fastboot command has to be done as root for linux users</I>, so that might be run as.
+<br/><br/>
+sudo fastboot flash recovery recovery-Tiamat-R4c-100611-1150-cwm.img <br/> <br/>
+Obviously, you will have some other image file name for a different manufacturer.
+You should see some text appear on the android that tells you that the device has been &#8220flashed".
+For the Motorolla Xoom, I needed the backbutton, volume up to reboot <I>into recovery mode</I>,
+and to press volume down as soon as the red Motorola logo appears. This got me to &#8220android recovery".
+(Using the volume down again gets to fastboot.) We want recovery for now (press the back power button to accept).
+
+This is that &#8220Clocworkmod recovery" thing (or cwm as it gets called). Now you can select  &#8220Choose zip from sdcard" and navigate to that Xoom-Universal-root.zip file.
+Accept whatever as is usual with these things. Your puppies will not die of anthrax because you root your
+android tablet: ignore any website that says they will.
+</p>
+<p>
+Now, you have in effect, a newly scrubbed device as if it were out of the box, except you now have
+the ability to wreck it completely because it is now rooted! We are back on the android tablet.
+ At this point I reinstalled the terminal emulator
+ and the X-plore file manager, and I also installed the Jota+ text editor. On the default virtual keyboard, you can get special control keys - but they are awkward, so I installed the android hackers keyboard and accepted the warnings. This means I have things like a control key on the virtual keyboard (you can always use system->language->input to change between the default and the hackers keyboard).
+</p>
+
+<p>
+To see what evil power you now have over your  	
+<a href= "http://en.wikipedia.org/wiki/To_a_Mouse"> &#8220Wee, sleekit, cow'rin, tim'rous beastie" </a>  just open that terminal emulator
+ (set the text size so it's actually big enough to see and change the colour to make it readable) and
+then type &#8220su<Enter>" into the virtual keyboard. On pressing &#8220allow", the prompt will change from
+ a $ to a #. You are now superuser, and panic's in thy android's breastie!
+</p>
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+
+<h1> <a name="busy">Busybox!</h1>
+
+<p>
+You may remember I mentioned that when you open that terminal emulator, you only have a limited subset of UNIX commands and options, and not much in the way of standard UNIX utilities. In fact you can't
+even use &#8220cp" to copy one file to another! Busybox will change all that. 
+Note that busybox is <I>only of any use at all</I> if you have rooted the android tablet as above. Once it is
+installed <I>and set up</I> you will have a &#8220proper UNIX command line". We will have commands like
+  &#8220cp", and &#8220env", and even utilities like telnet, wget, and the VI command line editor.
+The easy bit is to download the busybox installer and run it. As for your kittens, this just might turn them
+into <a href= " http://www.poetryfoundation.org/poem/176347"> Naughty Kittens </a>--- you know --- the sort that might just lose their mittens.
+</p>
+<p>
+Personally, I found setting it up was the hard bit: let me explain. Once you installed busybox,
+ open a terminal, and type &#8220env". You find that you do not have the env command. To
+run env, you have to type &#8220busybox env" instead. So far, if you type &#8220ls", you are running the
+&#8220ls" that is in &#8220/system/bin". That's the version that comes with the android tablet.
+ When you type busybox env, it uses the executable busybox
+ that appears in /system/xbin once you install busybox. Here &#8220env" is an <I>argument</I>
+ (as the parlance goes) that is given to the busybox executable that makes it run a UNIX env.
+If you run &#8220busybox ls", you get the busybox version of ls and not the default /system/bin/ls.
+Get the picture?
+</p>
+
+<p>
+We want to leave the /system/bin commands as they are. But, we might need all kinds of things
+ need to run UNIX commands in busybox but <I>without the busybox</I> bit in the command.
+We also need to leave parts of the android system to access the UNIX commands in /system/bin.
+To do this we need to set up <I>symbolic links</I>. It might sound difficult, but on a normal machine, this would be easy. With our Xoom running android, we run into two difficulties  straight away. 
+The first problem is this: what appears as your SD card (in the /sdcard directory)
+ is a partition on the physical SD card. The problem is, this partition happens to be vfat formatted
+ (on the Xoom MZ604 at least) and <I>the vfat format does not support symbolic links</I>.
+(The vfat system doesn't support having "x" (for excecuatble) in the permissions either.)
+So, the first difficulty is that we can't set up symbolic links.
+</p>
+
+<p>
+Our actual android system is over in the /system directory on an ext formatted partition of the SD card.
+We can set up our symbolic links there, right? This is the second (and not last) problem.
+The system directory is &#8220mounted" as <I>read only</I>. We cannot write a single byte to it, let alone
+set up a directory containing symbolic links.
+</p>
+<p>
+What I did, was to remount /system as read write and create a directory system/xbusybin, and put the
+symbolic links there. As root I did &#8220mount -o remount,rw /system". (Doing the same with ro instead of rw gets it back to read only.)
+I did this  before realising that we can write to /data, and the
+/data directory file system supports symbolic links and excecutable files! It's
+a much better idea to create /data/xbusybin (or /data/whateveryoulike) and put the symbolic links there.
+I shall continue is if I had followed my own advice!
+</p>
+<!--
+<p>
+I found the following commands out on the web, and these
+will let us re-mount /system so we can write to it. When we are finished the second command gets it back to
+read only. <I>Be sure to leave /system read only when your done --- otherwise those naughty kittens might scratch your android tab to pieces.</I> The commands we need are partially unintelligible to me, but they work <I>for me </I>: they are <br/><br/>
+mount -o remount,rw -t yaffs2 /dev/block/mtdblock4 /system<br/><br/>
+Now we can write to /system
+ <br/><br/>
+mount -o remount,ro -t yaffs2 /dev/block/mtdblock4 /system<br/><br/>
+Now /system is read only again! Obviously, you will  be root at the command line and have a #prompt
+rather than a $prompt for this to run. 
+</p>
+<p>
+<I>Warning!</I> What this does is to remount /system as a read-wite (rw) yaffs2 file system.
+If I look in /dev/block I see mmcblocks <I>and not</I> not mtdblocks as in the edit.rc link in the the useful links list at the end. This means two things. The first is I don't know exactly why this worked on my motorala
+ Xoom, and the second is I don't know what the result would be if you do have mtdblocks in your android's
+ /dev/block directory. I <I>think</I> that the worse thing that could happen is that that /system doesn't
+ get to be rw --- but google further if you have mtblocks rather than NAND or mmc blocks. Apart from that,
+ I shall state the obvious - don't actually overwrite anything in /system. Creating new directories
+or files is fine, but overwriting anything is a bad idea.
+</p>
+<p>
+So I remounted /system as read-write, and I hope you manage the same mtdblocks or otherwise. The busybox executable is in /system/xbin, so I created a directory called /system/xbusybin for my symbolic links to the
+ busybox UNIX commands.
+</p> 
+-->
+  
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+<h1> <a name="script">A script for Busybox Symbolic Links</h1>
+
+
+<p>
+ Now I ran into the a third problem: I couldn't get the
+script on the busybox home page to work properly for me. My fault probably, but here is what I did
+ in case you find the symlinks wont get written or work when following the busybox sites instructions.
+The script you see on the busybox (FAQ->Getting Started) website uses the output of &#8220busybox --list" at the command line. We shall follow suit. I used Jota+ to create a script called busywrite. To edit and
+test the script, create a MyScripts directory in /sdcard. Test stuff there before running anything for real.
+We shall copy stuff to  /data/xbusybin when it works. Here's my script<br/><br/>
+rm BUSY.sh<br/>
+for i in $(busybox --list)<br/>
+do<br/>
+   echo 'ln -s /system/xbin/busybox /data/xbusybin/'$i >> BUSY.sh<br/>
+done <br/><br/>
+I saved this script under the name &#8220busywrite.sh"
+In the command line 
+run  &#8220sh busywrite.sh". This generates a file called BUSY.sh. It contains lines that look
+like <br/><br/>
+ln -s /system/xbin/busybox /data/xbusybin/awk<br/><br/>
+If the file BUSY.sh doesn't exist to start with, just ignore the error message that trying to remove
+ it (rm BUSY.sh) generates.
+Copy BUSY.sh to /data/xbusybin. If we run &#8220sh BUSY.sh" from a command line (as root) in the /data/xbusybin directory, BUSY.sh will populate xbusybin with all the symbolic links we need.
+Before running &#8220busywrite.sh", make sure there is a space &#8220/system/xbin/busybox" and &#8220/data/xbusybin/" in that &#8220busywrite.sh" file.
+<p>
+
+<p>
+Lets test a symlink. From the command prompt, type env. The command is not found.
+Now type <br/><br/>
+PATH=$PATH:/data/xbusybin <br/><br/>
+This will add /data/xbusybin to whatever your PATH was before. (Your PATH is like a list of places where
+the system will look.) After typing this in, the system will look in /data/xbusybin as well as where it looked before. Now when you type env, the operating system will find a symbolic link called /data/xbusybin/env, which will run the busybox env.
+</p>
+
+<p>
+So, to reiterate,  PATH is an <I>environment variable </I> which contains all the places the system will look for a command. When you opened the terminal, PATH contained /system/bin and /system/xbin. The usual
+ ls command resides in /system/bin and the busybox executable resides in /system /xbin. The PATH=
+thing <I>adds</I> /data/xbusybox to PATH. Now, when you type env for instance, it
+ will find the symbolic link /data/xbusybox/env which will run &#8220busybox env".
+Once you have /system/xbusybox in your PATH, you have full access to UNIX utilities like vi, sed, and awk.
+This doesn't just save you typing busybox over and over. If you download various UNIX scripts, they will now
+run without modification. You now have  (at least the beginnings of) a proper machine. (Note
+that if you su to root, you have to run that PATH= thing again).
+</p>
+<p> If you are used to UNIX or linux, you will wonder if this PATH= command can be put into the &#8220.bashrc", or some equivalent, so you don't have to append the PATH every time you open a terminal. The bad news is that you can't. The nearest equivalent to doing this
+ is to edit /init.rc and edit the PATH it there. <I> Touble is, this init.rc file is generated each time the tablet boots</I>
+so you will lose any change you might make on reboot. (Quite apart from that, the file is read only, but more on that later.)
+You have to change the boot image in order to generate an init.rc file
+ that sets PATH to have /data/xbusybin in it. That is what we shall do next.
+</p>
+
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+
+<h1> <a name="ramdisk">Changing the Tablets Ramdisk! Edit init.rc </h1>
+
+<p>
+A big chunk of this section follows the link &#8220Edit init.rc in android" at the end of this article. At the end of this link is a link to downloading &#8220Extract Tools" which is essential (it provides mkbootimg and unmkbootimg excecutables).
+If anything like &#8220mkbootimg" doesn't work, just download and extract the zip file again. I found it to be a little temperamental. (For some reason (probably my fault), I couldn't run mkbootimg it on Ubuntu but it was fine in opensuse, and I am not sure that the resulting boot image will work on Jelly Bean. (Jelly-Bean users - prepare for soft bricking just in case!) The &#8220Edit init.rc in android" doesn't quite apply to the Xoom MZ604, and this section contains a work-around for the Xoom tablet.
+</p>
+
+<p>
+The Xoom tablet starts up from a binary image file called a &#8220ramdisk" contained in  a &#8220boot image". What we are going to do
+ is change that ramdisk. This sounds scary, doesn't it just? Mess this up and the tablet can't start any more.
+Your puppies begin to whimper. As we shall see, it isn't so difficult. All we shall do is change the PATH
+ in the boot image init.rc file.
+</p>
+
+<p>
+We are back on our PC with a terminal open, and we type &#8220adb shell<Enter>". (Of course, the tablet
+is connected from PC usb to tablet micro usb, and the tablet's usb-debugging is on.) 
+What happens? You see a # prompt, type ls and you see your android file system! You can issue commands
+as if you were in a terminal emulator on the android device! On your PC, do that PATH= thing, and
+you get the busybox env command. Looks great! To get back to your PC, just do &#8220exit" at the
+command prompt, and you have your PC terminal back.
+</p>
+
+<p>
+We can copy stuff from the PC to the tablet using <I>push</I> and we can copy stuff from the tablet to the PC
+ using <I>pull</I>. All we do is &#8220adb push PCfile TabletFile" and &#8220adb pull TabletFile PCfile".
+Here we can include the entire path in the names of TabletFile and PCfile --- whatever they happen to be.
+</p>
+
+<p>
+ Let's get back into that adb shell, and use some of those &#8220cat" commands in the link
+ on editing init.rc below. (The UNIX cat is short for &#8220 concatenate" and has nothing to do with any kittens whatsoever.) The word concatenate is from the latin for chain, which is &#8220catenary".
+The command &#8220cat file1 > file2" will copy file1 to file2. If we use >> instead of > we make a &#8220chain" under the name file1 consisting of file2 joined to the end of file1. For the Xoom MZ604, &#8220cat /proc/partitions" dumps the content of /proc/partitions to the standard output - that is - the terminal. So we get <br/><br/>
+ 179        0   30931968 mmcblk0<br/>
+ 179        1   30927872 mmcblk0p1<br/>
+ 179        8   31162368 mmcblk1<br/>
+ 179        9       3072 mmcblk1p1<br/>
+ 179       10       2048 mmcblk1p2<br/>
+ 179       11       2048 mmcblk1p3<br/>
+ 179       12       4096 mmcblk1p4<br/>
+ 179       13       2048 mmcblk1p5<br/>
+ 179       14      12288 mmcblk1p6<br/>
+ 179       15       8192 mmcblk1p7<br/>
+ 259        0     262144 mmcblk1p8<br/>
+ 259        1     173056 mmcblk1p9<br/>
+ 259        2   30663168 mmcblk1p10<br/><br/>
+So we have mmc partitions, not mtd or NAND. There is no /proc/mtd or /proc/NAND in the /proc/partitions
+ text file. This means that we have to depart from the Edit init.rc tutorial in our list of useful links.
+</p>
+
+<p>
+So where is the boot image? Well, find / -name boo* finds that we have something called boot in the directory 
+ /dev/block/platform/sdhci-tegra.3/by-name/boot, and ls -l in that directory tells us that this boot
+is just a symbolic link to mmcblk1p7 which is in /dev/block. From our PC terminal, we do adb pull
+ /dev/block/mmcblk1p7, and move it to a file called boot.img. Going back to the init.rc tutorial, we go to the link at the end and download base.add/sh, mkbootimg, and unmkbootimg. We use chmod to make both those bootimg
+files executable, and then do &#8220unmkbootimg boot.img" in the terminal. This extracts two files from the binary boot.img file, namely initramfs.cpio.gz and kernel.gz. Do not uncompress them here.
+</p>
+<p>
+OK, nothing nerve wracking is happening here, we are just mucking about with files on our PC. 
+We shall be having kittens later. We are now back with that init.rc tutorial. Following those
+ instructions we find ourselves in that newramdisk/oldramdisk directory with a copy of initramfs.cpio.gz in it.  We issue the command &#8220 gzip -dc initramfs.cpio.gz | cpio -i". What we get is a whole bunch
+of files and directories. Amongst them is init.rc! In this file we see the line <br/><br/>
+export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin<br/><br/>
+</p>
+
+<p>
+That list of directories separated by colons is where the OS looks for commands <I>in that order</I>.
+The android looks in /sbin first, then /vendor/bin (even though there isn't a /vendor/bin, and there isn't a
+/system/sbin either) and then /system/bin. This is where commands like  insmod, kill, ls, touch and so on
+all reside. After this it looks in /system/xbin, where busybox now resides. We can replace that line with 
+any list of files and directories.  So, do we replace that export PATH line with <br/><br/>
+export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin:/data/xbusybin<br/><br/>
+<I>or do we replace it with </I> <br/><br/>
+export PATH /sbin:/vendor/bin:/system/sbin:/data/xbusybin:/system/bin:/system/xbin<br/><br/>
+Which one do we choose? It makes no difference for a command like env. It only resides in /data/xbusybin.
+On the other hand, ls resides in /system/bin <I>and</I> /data/xbusybin. In the first case
+ the android will find /system/bin/ls and look no further, in the second case it will find
+ /data/xbusybin/ls and look no further. In other words, if we choose the second PATH, the xbusybox
+ commands will <I>override the ones that came with the android OS in /system/bin</I>.
+I shall choose the latter and use the override. This is because I might want to run install scripts
+that need fuller versions of the commands in /system/bin. This makes me feel like I am going to have kittens though.
+</p>
+
+<p>
+It's getting close to kittens and puppies time again. Having edited the init.rc file
+ and removed the gzipped ramdisk file, we do that &#8220find . | cpio -o -H  newc | gzip > ../initramfs.cpio.gz" command as in the tutorial. Taking the tutorial quite literally, we copy that
+ new initramfs.cpio.gz file and that kernel.gz file into a directory called workdir/finalfolder
+ where workdir is whatever directory that mkbootimg file is in, and within filefolder, execute
+&#8220../mkbootimg --kernel kernel.gz --ramdisk initramfs.cpio.gz -o new_boot.img" to create
+ our file new_boot.img. 
+</p>
+
+<p>
+Now, with sweat pouring from our brow and shaking hand, the obvious thing to do
+ would be &#8220adb push new_boot.img dev/block/mmcblk1p7" (in our case anyway) yes?
+For some reason I don't know about, we do not. Stick with the tutorial, and push new_boot.img
+ to /mnt/sdcard instead. Then, <I>on the tablet (not the PC)</I> open a terminal
+ and cd to /mnt/sdcard, and then (as root) do &#8220cat new_boot.img > /dev/block/mmcblk1p7".
+Obviously the details may differ for you. At any rate, I did all that, switched the Xoom tablet off,
+ and then rebooted. No harm has come to kittens, puppies, or anything else. I open up a terminal on the
+android, do env, and there it is. It picks up the xbusybox env. The Xoom MZ604 is now a UNIX machine 
+through and through! To misquote Hawkwind &#8220I've got a UNIX machine, I've got a UNIX machine,..."
+</p>
+
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+<h1> <a name="chroot">Running OpenSuSe Linux on a Tablet? Using chroot</h1>
+
+<p> 
+Oh dear, chroot your android into a binary image? Surely those mittens will be  lost forever! 
+Before we begin, we need to understand why (with the method here at least) we need more than one 
+core processor in the tablet. If you have a single processor tablet, what I outline here is useless:
+ ignore this section.
+We shall start openSuSe using a script and a binary image file.
+The thing is, that when we run the script, openSuSe will run on one processor, and it will
+be acting as a VNC server. Over on the other processor, android is still running, and we will get
+the openSuSe desktop by running a VNC client on android. (Install android VNC viewer on the android if it isn't already there.) 
+</p>
+
+<p>
+This method for openSuSe is <I>supposed</I> to be easy. Go to those OpenSuSe links below and
+ unpack  opensuse-arm-xfce-chroot.tar.xz. We have two files, opensuse.sh and a 
+(nearly 4GB) image file opensuse-arm-xfce-12.3.img.
+ We can put those on the tablet's internal or external SD disk. For the moment, I have mine
+on the internal SD card. On the tablet, all we have to do is (as root and in a terminal) do
+ &#8220sh opensuse.sh start" to get going. </p>
+
+<p>
+OK, there's a snag. The shell script, opensuse.sh, fails straight off. The script expects and requires
+ the UNIX commands to be accessible from /sbin. OK, we can put another set of symbolic links in /sbin right?
+Well, don't bother. It turns out that /sbin, like init.rc, is generated anew each time you switch the 
+ tablet on. This isn't a problem now we know how to change the ramdisk contained in the boot image.
+</p>
+
+<p>
+On our PC, there is no such thing directory called /system. Change to root, create /system, and change directory to /system. Then do an adb pull so you have a copy of the tablet's xbin in /system.
+Now (no longer root) go back to that oldramdisk directory that you had in the last section
+and make a copy of BUSY.sh in it. There is a directory called sbin in the PC's oldramdisk directory.
+Do a global string change in BUSY.sh so you have lines like &#8220ln -s /system/xbin/busybox sbin/awk"
+in it, and then do &#8220sh BUSY.sh". Note, If your'e like me, it's difficult not to type &#8220/sbin/awk" in the example symbolic link I just gave. No, it's got to be &#8220sbin" without that &#8220/"
+ if you think about it.
+
+The oldramdisk sbin directory is now populated with symbolic links.
+(Just do an &#8220ls -l sbin" to check if it's worked).
+ Now we shall have all those symlinks in that sbin.  All that is left to do is to follow the same instructions as at the end of the last section to make a new boot image and get it onto the tablet. This will pack the new sbin into the gzipped initramfs file, which mkbootimg will pack into the new boot.img.
+As the parlance goes, we can now &#8220chroot"  the device as far as the opensuse.sh script is concerned.
+It can now use chroot (and all the other things it looks for in /sbin) so that (in the terminal you run sh opensuse.sh from) the android's root file system  now seems to be repaced by the openSuSE root file system, and openSuSE is running on one of the two processors.
+</p>
+
+
+<p>
+Well all that worked fine, in the sense that the opensuse.sh finds all its unix commands in /sbin. 
+I had to edit the opensuse.sh file so that it always has the full path to the opensuse-arm-xfce-12.3.img file in that DEVICE=line. (Also make sure that MNT_PATH=/mnt/sdcard/opensuse.) The shell gives an error message about not being able to write to /tmp: ignore it! 
+After running the shell,  we end up in /, but it's the root directory of an opensuse linux system.
+</p>
+<p>
+I got an odd and very confusing command prompt though! I found that I had something like
+  &#8220can't find precmd command" and this message was <I> actually  part of the prompt </I>.  This prompt
+is not just ugly, it hinders you seeing what's going on. This is how to change it.
+On openSuSE, I had two users, root, and opensuse. Looking in /root and /home/opensuse, I found that there wasn't a 
+.bashrc in either directory.  To fix this prompt, we need to edit the .bashrc file. I use the vi editor. (You can use Jota over on the android and copy to opensuse after - vi is a command
+line editor, and you shall have to google on how to use it if you've never heard of it.) Whichever  way, create a .bashrc
+file with the following lines. <br/><br/>
+function precmd {<br/>
+typeset e=$?<br/>
+let " e " && print -n "$e|"<br/>
+} <br/><br/>
+ in both /root and /home/opensuse. (If you already have a .bashrc just append it with that function definition
+ if you get that annoying prompt.) You can do &#8220source .bashrc" and you get rid of that precmd bit in your prompt. This .bashrc file will run automatically the next time you start opensuse or open a new terminal, and again if you 
+swap user to
+the root using su, so there will be no further need to do &#8220source .bashrc".
+</p>
+
+<p>
+Now for a desktop! Go to the android bit of the tablet, and run androidVNC. The instructions as to what
+to type in are in the OpenSuSe links below. The second link has a slideshow of screen shots which you get
+by clicking on that &#8220openSuSe on Android" image.  To (almost) quote the first link &#8220Once the openSUSE starts you are chrooted inside the image in the terminal, for GUI start Android VNC and connect to localhost (port 5901) or from remote machine IPofdevice:1. Password is &#8220opensuse". Change it to something else by running vncpasswd and passwd in desktop terminal, also change the root password by running passwd in chroot terminal where you ran &#8220sh opensuse.sh start". The tiny difference is that I put
+ localhost instead of localhost:1. In android VNC I put opensuse under nickname, opensuse as the (temporary) password, localhost under Address, and 5901 under Port. I left Username blank as we don't have Windows authentication under openSuSE - then hit Connect.  We now see something similar to the KDE desktop  with the openSuSE chameleon logo. It's too small! 
+To fix this, drag your finger along a blank bit of the desktop image, and the touch screen will bring up a small image with a plus on it's right. Press that (more than once) to expand the desktop.
+</p>
+<p>
+There it is, my puppies are wagging their tails, and my kittens are purring. What we have is the xfce desktop for
+openSuSE! Oh dear, why are my pets so mixed up? Ah, there is no virtual keyboard! I first went back to the openSuSE terminal
+(the one you had before the openSuSE's xfce  desktop was run under VNC) and type "zypper install xvkbd" (yes - a virtual keyboard). Ubuntu users will notice that "zypper" is a bit like
+openSuSe's "aptitude". Once installed, the virtual keyboard will show up under the xfce desktop's apps. Disaster! this virtual keyboard stinks! It makes VNC hang up at every step. The thing is, if you rub your finger on a blank bit of the opensuse desktop again, you get that symbol with a minus sign on the left, a plus sign on the right, and (what's supposed to look like a keyboard) in between. The plus and minus signs scale up (or down) the opensuse desktop, and the keyboard symbol gives you the hackers keyboard! This is easier to use by far, and it doesn't hang up VNC at all. The down arrow in the usual android bottom toolbar will minimise it to the bottom of the opensuse desktop. I use the Xterm, which you can customise. With and Xterm up (click on the opensuse symbol bottom left and select "system", you might find that the keyboard hides too much of the System->Xterm for a desktop terminal. I find resising it awkward. The thing is, place your finger on the top bar of the Xterm, and (after a little time) you can move the Xterm with your finger. The thing is if you move it right to the top of the desktop, it will resize so you can always see what you're doing with the hackers keyboard up. Don't bother installing xvkbd.
+
+Two things, the Xterm is difficult to read, and the touchscreen can be awkward. You need a file called &#8220.Xdefaults" in your /home/opensuse directory. Put &#8220XTerm*font:-*-lucidatypewriter-*-*-*-14-*-*-*-*-*-*-*" on the first line, and 
+&#8220Xterm*size:vt100*geometry: 80*20" on the next (no quotes). The 14 is the font size, and just google to see what else you might put here. 
+
+As for the touchscreen mouse? If you get yourself an &#8220On-the-go" cable (male usb to male micro-usb adaptor) you can just use a USB-mouse (wired  or wireless) straight off. (Only thing is, it's best to put things into the tablet's micro-usb after everything is started up - otherwise some things may hang up.)Things like USB-sticks need more work - google on that. This makes some tasks much less awkward on the opensuse desktop. For some programs on opensuse, like xfig for instance, a USB mouse is essential!
+ 
+ Now you can type in things into terminals and dialogue boxes in the xfce desktop that you see on android VNC.  My kittens are yapping and happily wagging their tails and my  puppies are purring and coughing up furballs: all is as it should be.
+</p>
+
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+
+<h1> <a name="office">Latex and/or Open Office </h1>
+<p>Latex? It's a document processing program. Thing is, I really don't like things like microsoft office at all. LibreOffice is a free open source alternative which is every bit as good. Not only that, it can read in MS office files, and ouput in MS format too, so it's entirely compatible with MS Office. You don't have to be running linux, you can install it on MS windows and Mac too.
+It's all too menu point and clicky for me. I use Latex. In fact, many journals won't except anything other than latex. </p> 
+</p>
+<p>
+Now for some bad and good news. On the android version of opensuse that I have been talking about, you can't get  LibreOffice.  However, if you are a menu - point and click fiend, there is some good news to come. Before LibreOffice, there was OpenOffice. OpenOffice forked (as the parlance goes) into LibreOffice and Apache OpenOffice. Both have MS office features. They have spreadsheets and databases, presentations, drawing, and mathematical formulae on top of the ability to create great text documents . Apache OpenOffice is MS office compatible as well as LibreOffice. There is an android version of Apache OpenOffice already available. So, you can do all that kind of stuff without opensuse. Just  download and install &#8220AndrOpen Office", and away you go. No such luck if you're a die hard LibreOffice fan already, but it looks as if an android version of LibreOffice will be released early next year (2015).</p>
+<p>
+So, with opensuse, and AndrOpen Office, you  have a fully functioning powerful PC on your tablet.
+The exception is that fast 3D animated graphics is more or less ruled out by the VNC interface between the two processors. But enough of that, back to my favourite document preparation system - Latex. This works very  differently to the point and click word processor paradigm MS Office and OpenOffice use. On linux, latex is installed via texlive. If you are not familiar withi it, there are plenty of tutorials online.
+</p>
+
+<p>
+Back on our tablet's opensuse desktop, we can install latex as part of texlive.
+A full install of texlive is far too big for our cut-down android version of opensuse! If you install it, you won't be able to install much else. (The opensuse chroot partition is quite small.) Do not follow my advice in previous versions of these pages (texlive-common is just documentation. If you install it before installing texlive it will automatically do a full install of texlive as well!)  I shall assume we are point and click. Click on opensuse at the left of the bottom desktop toolbar, and you get a menu as you did when bringing up that Xterm.  In the software manager (under settings - not system - in the menu), install the following. For Latex you will need to install the following. 
+<ul>
+<li>install texlive-latex</li>
+<li>install texlive-bibtex</li>
+<li>install texlive-biblatex</li>
+<li>install texlive-makeindex</li>
+<li>install texlive-imakeidx</li>
+<li>install texlive-dvips</li>
+<li>install texlive-xdvi</li>
+<li>install texlive-fancyhdr
+<li>install texlive-jknapltx  (for mathrsfs)</li>
+<li>install xfig </li>
+<li>install aspell</li>
+<li>install aspell-en</li>
+</ul>
+</p>
+<p>
+Both bibtex and biblatex are for bibliographies. If your articles need an index use makeindex, and add imakeidx for multiple indexes. The dvi programmes allow you to generate postscript and pdf output, and xdvi allows you to view the article in a window. I need the fancyhdr and jknapltx
+(wierd name - packages by Joerg Knappen which I sometimes mis-type as jknaptrix) which I only use for mathrsfs.  I like xfig for creating diagrams. The aspell program is a command line spell checker if you want it (there are many others). You can install more from texlive if you want, including slide presentation tools. There are spreadsheets and database stuff available in opensuse.
+
+You might want to use zypper and install via the command line instead of point and click.
+</p>
+
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+
+<h1> <a name="space">No Space Left on Device? </h1>
+<p>
+If your'e like me, you will soon find that there isn't enough room in the opensuse partition for your programs and data. Aha! You might say, I can see /sdcard (or /mnt/external1) from opensuse, so I can put my programs and data there, right? This is absolutely no good at all. The reason is, these are vfat partitions. Everything that is put there "belongs to" the android device. You cannot change the user-group-others partitions of anything on there. Worse still, as we already mentioned, vfat does not support executable files! You can do things this way, but it's as awkward as hell.
+
+The thing is that the android /data file isn't vfat, we can change permissions and have executable files on /data. What is more, there is easily enough room  for my programs and data.
+ So, here's what to do. Make a directory called /data/mySuse (or something like that), and move all your stuff here. Then (you will be "root" already" -just to "see" /data) do these two unix commands.
+The first is (if opensuse is your user name) chown opensuse -R mySuse. This means that opensuse is now the owner of mySuse and all the trees of subdirectories within /data/mySuse. The next thing to do is
+ chgrp users -R mySuse. This means that opensuse's users group can access the files. That's it!
+Now you can just "sh opensuse.sh start", open an Xterm, and cd /data/mySuse, and you can use that as your main user space, for programmes you have source code for, data, and documents.</p>
+<p>
+Oh, and by the way, you can't move (UNIX mv) files from one partition to another, move does not work across partitions. The move command doesn't actually phsically move any data! Itjust tells the local partition's file system that it's got a different name. The copy command (UNIX cp, or copy within X-plore on android) physically copies the data, and is therefore slow for big files.
+You can copy data from one partition to another. You can delete the original if you want.
+</p>
+
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+
+<h1> <a name="stuff">Other Stuff to Install </h1>
+<p>
+I also need to do programming -  including openGL (linux Mesa) graphics. This is a summary of what I need to install on my android's opensuse. Using zypper or the desktop opensuse->Settings->YaST->Software manager,
+
+<ul>
+<li>install gcc</li>
+<li>install gcc-C++</li>
+<li>install gcc-fortran</li>
+<li>install make</li>
+<li>install nemiver</li>
+<li>install git</li>
+<li>install libSDL and LibSDL-devel</li>
+<li>install libSDL-ttf
+<li>install freeglut and freeglut-devel</li>
+<li>install gltt and gltt-devel</li>
+<li>install libgle3 and libgle3-devel</li>
+<li>install freetype2-devel</li>
+</ul>
+</p>
+<p>
+The first three are all from the gnu compiler collection (gcc), you can install perl, python, java, and pretty well anything you can think of in terms of comilers. Nemiver is a gui for the gnu-debugger (gdb). The rest are related to writing graphics in openGL. As you install these, lots of other things are installed along with them, so you don't need to install things like Mesa separately, for instance. I have included a lot that enables text within graphics. One thing that you have to compile from source is oglft. If you need it, it is a sourceforge.net.
+Whatever setup you had to do on your PC for these things, the same goes here. If you need qtheaders, you don't need to install qt,just copy your (possibly modified) headers from the pc and put them (probably) in /usr/local/include. I have also downloaded and built things like slatec (a free and large numerical analysis library) and installed them just as on a PC or laptop. All runs beutifully. I don't know whether it's the Android VNC connection, but moving 3D openGL based graphics programs are slow.
+
+</p>
+
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+
+<h1> <a name="bricked">Bricked! Unbricking an Android</h1>
+<p>
+I don't know how I did it exactly, but it all started with downloading an app to change the android's network hostname.
+You don't need an app after all, instructions for changing the hostname are given the hostname link below.
+
+Well it started with trouble after that hostname app, which wanted a smart install of busybox,
+ and  I can't even remember exactly how I managed to wreck my android (or brick it if you prefer) trying to get out of
+ that trouble. If you manage to do the same, the RSPCA will be coming to smash down your door just like they did mine!
+ What are you to do? Is there any hope?
+</p>
+<p>
+If you have left usb-debugging on, and if on rebooting into recovery, you can still somehow get that fastboot protocol thing,
+ the chances are that you can restore your android. If adb can't see the device, and the android isn't so wrecked that you
+can't get into the settings menu to check usb-debugging, then you might be OK if adb can then see the device.
+If you can't get into fastboot, and/or adb can't see the device no matter what, then I am sorry: I have no idea what you can do, <I>or even if there is anything you can do</I>. As you will have noticed I am a beginner as far as tablets are concerned, and all I've done is to give a list of the links to instructions I found useful, and to add some extra commentary.
+</p>
+<p>
+I followed the instructions in the rescue tutorial link below.
+For the Motorola Xoom MZ604 in the UK, I needed to download h.6.2-24 build from the link in the rescue tutorial. 
+All went well for me (remember to run fastboot instructions as root!) and I found myself with a brand new
+Android 3.0 Honeycombe (linux kernel 2.6).  <I>WHAT?</I>  Don't worry! It takes very little in the way of effort
+to get the tablet back to Android 4.0 Ice Cream. Once you have Honeycombe, just go to "settings->about->system update".
+These updates don't just do minor updates to the current system, <I> they upgrade versions!</I>. The first
+upgrade gets us to Android 3.1, the next to android 3.2, the next to android 3.2 (pre-upgrade to android 4), and
+then the last one gets us to android 4.0.4. No effort and just a bit of patience gets you back.
+
+ 
+</p>
+
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+<h1> <a name="useful">Some Useful Links </h1>
+
+<ul>
+<li> <a href="http://www.droid-life.com/2011/02/25/how-to-unlock-the-motorola-xoom-bootloader/"> Unlock the Android </a> </li>
+<li> <a href="http://developer.android.com/sdk/index.html#download"> Android Software Development Kit </a> </li>
+<li> <a href="http://forum.xda-developers.com/showthread.php?t=1242241&highlight=universal+xoom+root"> Root the Android </a> </li>
+<li> <a href="http://forum.xda-developers.com/showthread.php?t=1242241"> Universal Root </a> </li>
+<li> <a href="http://thingywotsits.blogspot.co.uk/2013/08/rooting-motorola-xoom.html"> Universal Root for Jelly Bean (version 4)</a> </li>
+<li> <a href="https://play.google.com/store/apps/details?id=com.jrummy.busybox.installer&hl=en"> Busybox installer </a></li>
+<li> <a href="http://www.busybox.net/FAQ.html"> Busybox </a></li>
+<li> <a href="http://www.busybox.net/FAQ.html"> Busybox FAQ </a></li>
+<li> <a href="http://forum.xda-developers.com/showthread.php?t=1242241&page=42"> Download zip file </a> </li>
+<li> <a href="http://forum.xda-developers.com/showthread.php?p=15806494"> Remount /system as rw or ro </a></li>
+<li> <a href="http://forum.xda-developers.com/showthread.php?t=2141817"> adb tutorial </a></li>
+<li> <a href="http://droidcore.blogspot.co.uk/2012/12/how-to-edit-initrc-in-android.html"> Edit init.rc in android (includes link for Extract Tools download at end)</a></li>
+<li> <a href="https://lizards.opensuse.org/2013/02/20/opensuse-on-phonestablets/"> Tablet OpenSuSe 1 </a></li>
+<li> <a href="https://lizards.opensuse.org/2013/05/09/opensuse-12-3-on-android/"> Tablet OpenSuSe 2 </a></li>
+<li> <a href="http://nileshgr.com/2012/10/13/how-to-change-wifi-host-name-of-your-android-device"> Change hostname </a></li>
+<li> <a href="http://rootzwiki.com/topic/1586-stock-images/"> Bricked? Get the H.6.2-24 build stock image from here!</a></li>
+<li> <a href="http://www.mediafire.com/download/0pa7v4xd5ry1hgr/H.6.2-24_Retail_Europe.zip"> Or  from here!</a></li>
+<li> <a href="http://www.xoomforums.com/forum/motorola-xoom-development/15179-how-rookie-rooting-flashing-unrooting-under-one-roof.html">Bricked, use post #3 of this link so you can unbrick using the instructions here </a></li>
+</ul>
+
+</p>
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+<h1> <a name="annoy">Some Annoyances </h1>
+
+<p>
+My first annoyance is Xoom specific. It's really something to watch out for. To insert a micro
+ SD card, you have to slide out the cover. This cover slots into a metal guide to stop it wobbling
+about. So, with the cover off, you have the slot for the SD card to go in. Unfortunately, you also have the slot for the cover slide to go in! If your eysight isn't to good, or you have the occasional bout of butter fingers, the SD card can disappear into the guide for the cover slide.
+If it does so, it is not just a matter of turning the Xoom upside down and shaking. That SD card can get stuck there. You have to take the two parts of the Xoom's back off, which requires
+special screwdrivers and watching youtube for Xoom repairs. It is &#8220the Devil's own job" to get it out of that slider guide. Eventually, I managed to get
+ the darn thing out with a straightened paper-clip. 
+</p>
+<p>
+Having said that I still like the Xoom-MZ604, but you have to be extremely careful with your external SD cards. Staying with SD cards, 32GB cards are fine. I have tried 64GB cards, but these
+have both lost data on rebooting, or even on simply removing and re-inserting the card. 
+That means the problem can't be due to the android startup or shut down. 
+It seems there are plenty of duff 64GB cards around at the moment. I can't see it being the tablet's fault.
+</p>
+
+<p>
+Now, for a moan about the desktop I installed. The problem is editing on the xfce desktop
+ provided by opensuse on an android tablet. 
+I am used to the vi command line text editor.
+Vi doesn't work properly on either type of desktop terminal. 
+(It works fine outside of the opensuse desktop.)
+For some reason, when you open vi in a desktop Xterm for instance, you find the escape key doesn't work. It's not a hacker's keyboard problem. It doesn't work for a USB keyboard either. 
+(USB Mice - including wireless ones - and USB keybords work fine with a male USB to male micro-USB connector. I think this depends on the tablet supporting something called USB-On-The-Go.)
+</p>
+<p>
+Getting back to that vi editor, what you have to do is edit a file called &#8220.vimrc". If it doesn't exist already, just edit it as a new file.
+ Then, put a line with &#8220imap zz &lt Esc &gt" in this &#8220.vimrc" file. The &#8220zz" is your choice, you might want &#8220jj" or something else. Then, if you type &#8220zz" (quickly) in insert mode, it acts as the escape key, then press &#8220:w", to write to the file, then &#8220:q" to quit.
+ It's quite useful to have line numbers visible, just add another line with &#8220set number" into your .vimrc file. (Using &#8220vi" actually invokes the vim editor rather than the more ancient vi editor.) Make a copy of .vimrc in root's home directory too. If you do this edit of .vimrc using vi, be sure to press
+ ":"  to enter command mode as soon as you're in vi, otherwise, when you type &#8220imap", the &#8220i" will put you in insert mode, which you can't get out of without the escape key! 
+</p>
+<p>
+There are more small  annoyances to come. After editing the .vimrc file, every time you type a "z" in insert mode, vi will pause a bit. This can be fixed apparently, but I haven't checked it out.
+A further slight annoyance with vi in a desktop terminal is that you don't have arrow keys - so it's back to hjkl for navigating, and
+ you don't have  other non standard things like control-f for page forward. I am afraid I am used to these. However, if you use vi in the terminal that you did &#8220sh opensuse.sh start" in, you get these little extras back, and you have the escape key as well. Oh, and I have to add that I even got text breakup problems using vi
+ in a desktop terminal. In the end, I have gone over to using the vi editor outside of the opensuse desktop. However, you might not find the same problem on different type of tablet.
+</p>
+
+
+<p>
+There is worse news if  you want to edit using a point and click editor in a window rather than the use a command line editor. The editor on the opensuse xfce desktop is called Leafpad. It is very awkward to use without a mouse, and almost as awkward to use with one. Worse than
+that, the text often breaks up when you go to a line to edit, leaving you no idea of what you are editing... Leafpad is a waste of time.
+</p>
+<p>
+I tried installing  gedit. This looked much better than Leafpad at first. But I still got text breakup problems with gedit. I shall tell you how to add repositories, with the repository
+ that supplies gedit as an example. The command line to add the repository that you can 
+download gedit from is very hard to get right. Just create a file with the command line in, so you can correct any mistakes without having to type the whole darn thing in the command line again.
+So, you want &#8220zypper ar http://download.opensuse.org/distribution/12.3/repo/oss SuzieOss" in a file called addrepo.sh, and then just type &#8220sh addrepo.sh" and it will add the repository. Here SuzieOss is an alias of your choice - a nickname if you will. You then need to do &#8220zypper refresh", and you can now access the repository. Once done, just &#8220zypper install gedit", and gedit is yours... 
+</p>
+
+<p>
+You may remember that I am putting a lot of my stuff in /data. If you do the same, you will find
+that you need root access to read it. To use gedit on files in /data/mySuse, you need to "su",
+ and then use the command "gnomesu gedit". (Note that using sudo won't work.)
+Either way, I can't seem to get away from text breakup problems on the opensuse desktop on the 
+android. If command line editors like vi and emacs are anathema to you, you could use something
+ like Jota on the android side. You would have to copy them to /data as root though if you
+ use the same setup as I do.
+</p>
+<p>
+So, my recommendation is to do your editing outside the opensuse desktop environment.
+The overriding problem in the opensuse desktop on a tablet is text breakup. This may
+ be a problem peculiar to the Motorola Xoom 10.5 inch tablet. Tell me if you have any luck with another type of tablet!
+</p>
+<p>
+<a href= "#conts"> Back to Contents </a>
+</p>
+
+<h2> <a name="change"> Changes </h2>
+<p>
+This was uploaded in  Dec 2013, last updates July and Sept 2014.
+<p><p>
+July 2014: (added stuff on virtual keyboards, installing latex, and a what to do if there isn't enough room on the opensuse partition).
+ <p><p>
+Sept 2014: Added Comments on Jelly Bean including Universal Root version 4.
+Added the links that were missing on unbricking an android using a stock image. (Sorry, I just plain forgot to add them, and didn't notice for ages.)
+I have modified and made some corrections to the Latex section, and added advice on further software which may be installed. Other edits are for clarity, or minor.
+<p><p>
+Sept 22: Added stuff on Apache OpenOffice and LibreOffice alternatives to MS office (both MS Office compatible)
+<p><p>
+Sept 25: Added "Annoyances" section, and made this page more naviagble.
+</p>
+<p>
+Oct 12: Added that you get text breakup problems on both gedit and vi in the opensuse desktop.
+Recommend that editing using command line editors over on the android half of the tablet
+ is the best option.
+</p>
+
+<a href= "#conts"> Back to Contents </a>
+</p>
+
+
+-->
+
+</body>
+</html>
+ 
+

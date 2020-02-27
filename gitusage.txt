@@ -1,0 +1,34 @@
+git clone https://bitbucket.org/seagods/seagods.git
+
+get a directory called "seagods"
+
+has one file, README.md
+
+edit first filefile.txt
+
+git add firstfile.txt  (add to local seagods git)
+
+git status
+
+
+git commit -m "added firstfile.txt"
+
+git push
+
+now edit firstfile.txt
+
+git add firstfile.txt  (adds changes)
+
+git commit -m "modified firstfile.txt"
+
+git push
+
+Next? (for bitbucket)
+
+C:\Users\daddio\seagods\bitbucketpages>git config --global user.name "seagods"
+
+C:\Users\daddio\seagods\bitbucketpages>git config --global user.email "seagods@hotmail.com"
+
+C:\Users\daddio\seagods\bitbucketpages>git config --global core.autocrlf true
+
+C:\Users\daddio\seagods\bitbucketpages>git config --global core.safecrlf warn

@@ -1,0 +1,990 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name=Description" content="Getting Started With Perl">
+<title>Chris Godsalve. Getting Started With Perl</title>
+
+<style type="text/css">
+@import url(cochise.css);
+</style>
+
+</head>
+<!-- Background white, links blue (unvisited), navy (visited), red
+(active) -->
+<body>
+
+
+<blockquote> Copyright &copy 2004 C. Godsalve, all rights reserved.</blockquote> <br clear="all">
+
+<h1 align="center"> <a name="begin"> Getting Started With Perl </a> </h1>
+
+<ul>
+<li> <a href="#Hello" >A "Hello World" in Perl </a></p>
+<li> <a href="#var" >Variables</a></p>
+<li> <a href="#array1"> Arrays and Lists </a> </p>
+<li> <a href="#hash1"> Associative Arrays (Hashes) </a> </p>
+<li> <a href="#Control1"> Control Structures </a> </li>
+<li> <a href="#sub1"> Subroutines </a> </li>
+<li> <a href="#file1"> Working With Files  </a> </li>
+<li> <a href="#objects"> Classes of Objects and OOP in Perl  </a> </li>
+<li> <a href="#strings"> Working With Strings </a> </li>
+<li> <a href="#cpan1"> CPAN </a> </p>
+<li> <a href="CGI.html"> More on Perl with CGI </a></li>
+</ul>
+
+<blockquote>
+<p>
+Before you can even think about getting started with Perl, the Perl interpreter has to be installed
+on your computer. If you are running linux, for instance, the chances are it's installed
+on your system anyway. If it isn't check out whether it's on your installation discs somewhere
+and install it. If you have MS windows, you can just
+<a href="http://www.perl.com/download.csp">download perl </a> for free. At any rate, we shall assume that you have downloaded and installed perl, or have
+it on you're machine. Note, that we  have used the word <em>interpreter</em>. If you are used
+to programming languages like C and Fortran, you will be used to  writing the source
+code, compiling it into an executable file, and the executing the programme. With perl, you write the code, then run the interpreter on it. The interpreter looks at each line, one by one, interprets
+and executes that line till it stops at the end. If you run the programme lots of times, it interprets every line again and again. This means that, for some applications, perl isn't the
+right tool for the job. Nonetheless, its a powerful tool, and well worth using for some
+types of application.
+</p>
+
+<p>
+By the way, perl stands for Practical Extraction and Reporting Language, and it's great
+for doing just that. Reading files, extracting the data you want, and giving the data
+to another programme. If you're fed up with the limitations of unix shell scripts and awk, perl is what you want.
+It's much more powerful and flexible than using awk to get data out of files. Before
+you continue reading this, bear in mind that if you google on "perl tutorial" you'll
+find many excellent perl tutorials. This is a tutorial written as a mnemonic for the author, so you might find that what <em> you</em> want is out there on google.
+</p>
+</blockquote>
+
+<h1 align="center"  >   <a name="Hello">A Hello World in Perl </a> </h1>
+<blockquote>
+<p>
+Now, here is a perl script. Type it in into an editor and save it as Hello.pl.
+</p>
+#!/usr/bin/perl  <br />
+print "Hello from perl!\n";
+<p>
+the first line (often called the <em> shebang </em> line) starts with a hash exclamation
+mark, then the path to the perl executable. On a lot of unix like systems that is /usr/bin/perl.
+
+Note, if you're using windows, I <em> think </em> that it should
+be #!c:\perl\bin\perl (it might need the .exe extension).
+On some systems, you can drop the
+first line altogether, but options are often set here, so don't miss it out.<p>
+
+
+<p>Now, at the command line, go to wherever your Hello.pl file is and type
+<br /><br />
+perl Hello.pl
+<br/><br />
+So, to output to the screen, you need a print statement, followed by something in double quotes, followed by a semi-colon.
+If you're wondering about the \n bit, that's just means new line. If you miss it out
+and then have another print statement, the two strings appear joined on a single line. C programmers will be familiar with the use of the semi-colon at the end of any command. The interpreter reads the file, and every time it comes across the semi-colon it knows it has
+reached the end of a statement, which it can now interpret.
+</p>
+
+<p>Now that we've begun, it's time to go back to the command line and type <br/><br/>
+perldoc perl<br/><br/>
+Yes, that's your perl documentation, to get a list of contents, just type<br/><br/>
+perldoc perltoc<br/><br/>
+You shall see in bold type, perlintro -a brief introduction, anything that looks like this
+can be accessed through perldoc. That is, you can type<br/><br/>
+perldoc perlintro<br/><br/>
+or <br/><br/>
+perldoc perlfaq<br/><br/>
+for instance. Perldoc can save you a lot of trouble. Later, when we introduce some perl
+functions, you can see the documentation for the function using the -f flag. For instance, when
+we come across the function called join, you might want to find out more by typing<br/><br/>
+
+perldoc -f join<br/><br/>
+at the command line, and so on.
+
+
+<br/> <a href="#begin"> Back to list of contents </a>
+</p>
+
+
+</blockquote>
+<br clear="all"/>
+<h1 align="center">   <a name="var">Variables in Perl</a></h1>
+
+<blockquote>
+<p>
+In this sense, a variable (often called a <em> scalar </em> in perl) is a piece of data that has a name. The data could be
+pretty well anything, say someone's name, or a number like 3.1415926. The name of
+the variable is a piece of data in itself, and in some sense you can just think of
+it pointing the computer to the place where the data is. In perl, it's done like this. <br/> <br/>
+
+$firstname="Freddie"; <br/>
+$Age=21;<br/> <br/>
+The dollar tells the interpreter that the string that follows is a variable name (alphanumeric with no spaces, always begin with a letter, underscores are OK).
+Before we continue, note that any statement that begins with a # is a <em>
+comment statement</em>. The perl interpreter will ignore it, these statements
+are to give human readers reminders or clues as to what the perl script is doing.
+(Programmers who are used to strongly typed data will find this odd, there are no
+data types in perl, the interpreter figures out what's going on.)
+Here is an example that tells the reader what chomp does. <br/> <br/>
+#!/usr/bin/perl<br/>
+# ask for user input <br/>
+print "Please type in your name\n"; <br/>
+
+# chomp grabs stdin, places stdin into name <br/>
+chomp($name=&lt STDIN &gt); <br/>
+
+# print out the input <br/>
+print "\nYour name is $name\n"; <br/>
+
+# another print statement telling the reader what to do next <br/>
+print "\nPress &lt ENTER &gt to continue..."; <br/>
+
+# Perl waits at these brackets for user input <br/>
+<> <br/> <br/>
+So, we have truly gotten started, we have variables, some input, and some output.
+The chomp command grabs data, here the &lt STDIN &gt tells chomp that it's got to
+grab the data from the standard input, that is, what you typed in before you pressed
+return. Note that the pause that results from the angle brackets at the end can be
+ quite useful. On some machines, for instance, the output will flash up onto the
+ screen and disappear before it can be read. using the <> means that the output can now be read,
+ and it will only disappear when the user hits &lt ENTER &> (or return if you prefer).
+
+</p>
+
+<p>
+Floating point numbers will be of use to many, here is a simple example of
+how to format floating point output, which uses perl's formatting function <em>sprintf</em>. <br/> <br/>
+# Assign a floating point number to the scalar $number <br/>
+$number = 1.1111; <br/>
+
+# Print $number <br/>
+print "$number\n"; <br/>
+
+# Cut the decimal place to two <br/>
+print sprintf "%.2f\n", $number; <br/>
+
+# Change to an octal number <br/>
+print sprintf "%of\n", $number; <br/>
+
+# Change to a percentage <br/>
+print sprintf "%%f\n", $number; <br/>
+
+# Change to a string <br/>
+print sprintf "%sf\n", $number; <br/>
+
+<br/> <a href="#begin"> Back to list of contents </a>
+</p>
+</blockquote>
+
+<h1  align="center" > <a name ="array1">Arrays and Lists</a></h1>
+
+<blockquote>
+<p>
+An array can be thought of as a list of data, each having a place number, where you can
+access the data by knowing the place number in the list. In perl, as in C, the place number
+of the first element is <em> zero </em>, so a list containing five numbers has elements numbered from zero to four. This infuriates FORTRAN programmers who are used to using one to five. A curious feature of perl is that you can have negative element numbers, the -1th element is actually the last element in the list, the -2nd element is the one before last, and so on.
+
+In perl, arrays are declared with an @ symbol, but, you don't need to  explicitly declare
+an array, you can just make a list, as follows. <br/> <br/>
+
+($apples, $oranges, $grapes, $walnuts,) = (4.99, 3.99, 1.99, 12.99,); <br/>
+
+print "apples are worth $apples\n"; <br/>
+print "oranges are worth $oranges\n"; <br/>
+print "grapes are worth $grapes\n"; <br/>
+print "walnuts worth $walnuts\n"; <br/>
+
+
+<br/><br/>
+This declares the variables, and assigns their values all in one go. Note, that in these lists,
+every variable is followed by a comma, even the last one, and that the same thing goes for
+the list of values. You can print out a list like this, <br/> <br/>
+
+# printing a list <br/>
+print ("Why", "hello", "there",); <br/> <br/>
+but the output would be Whyhellothere, there is a function called <em> join </em> that joins
+strings together, but puts something in between each string. In this case we would want a space, so  <br/> <br/>
+
+# list printed and joined by spaces; <br/>
+print join (" ", ("Why", "hello", "there",)); <br/>
+
+
+ <br/> <br/>
+ prints out Why hello there. As well as putting spacers or whatever between strings, we
+ can take a long string  and split it up into an array of small strings.
+  Here is an example using the <em> split </em> function. <br/><br/>
+
+# Before split<br/>
+print ("Why, hello, there,");<br/>
+
+# After split<br/>
+print ((split /,/, "Why, hello, there,"));<br/>
+
+# print only the second word<br/>
+print ((split " ", "Why, hello, there,")[1]);<br/><br/>
+
+As in C, individual elements of an array or list are accessed by using the index number in square brackets.
+The split /,/ tells split to read the string, so that every time it sees a comma, it
+puts what has gone before the previous comma into an array element. This will be very useful
+for reading files where the data on each line is separated by commas. If the data were
+separated by ampersands for instance, we would use split /&/.
+Now, let's see how arrays look in perl. <br/> <br/>
+
+@names = (Fred , Mary , Jane ,); <br/>
+
+print "$names[0]\n"; <br/>
+print "$names[1]\n"; <br/>
+print "$names[-1]\n"; <br/> <br/>
+
+The @names tells perl that the variable names holds an array, and the elements are in the
+list on the right hand side of the equals sign. To access a particular element of the array declared as names, you have the element number in square brackets. Always remember that
+the first element is numbered zero, and that a negative element number means that you're
+counting back from the end, with the -1th element being the last. Note that you don't access an element of an array with @names[0], an element is a scalar so it's $names[0].
+
+</p>
+
+<p>
+
+There are lots of things you can do to manipulate arrays in perl, we shall give a few examples
+here. First we introduce the $_ and @_ symbols, you can think of them as meaning roughly <em>it</em> and <em>them</em>. Here we use the $_ in perl's map function. <br/> <br/>
+# create a list of numbers<br/>
+print (map {2 * $_}1, 2, 3,);<br/><br/>
+
+Here, the 2*$_ means two times whatever it is, and these its are the elements in the array. Instead of having the list (1,2,3,) the map function
+maps it on to a list (2*1,2*2,2*3). As you can see, the map function is useful for performing
+the same operation on each array element. You might try using the join function to put spaces
+between the outputs so you get 2 4 6 instead of 246. As we have introduced the * operator,
+we may as well add<br/><br/>
+
+# * means times<br/>
+$guitar = 10 * 5;<br/>
+# /means divide<br/>
+$piano = 20 / 2;<br/>
+# no surprises here<br/>
+$dulcimer = 30 + 5;<br/>
+"aaa"."bbb" joins or concatenates two strings<br/>
+$violin = 40 - 15;<br/><br/>
+
+
+Arrays can be joined together, it's this simple,<br/><br/>
+
+# create an array<br/>
+@array1 = (2, 4, 6, 8,);<br/>
+
+# create a second array<br/>
+@array2 = (1, 3, 5, 7, 9,);<br/>
+
+# Merge the first two arrays into @array3<br/>
+@array3 = (@array1, @array2);<br/><br/>
+
+Arrays have push and pop functions. If you are not familiar with stacks, this is what is
+meant. You are stacking plates, every time you add another plate to top of the stack, you are said to <em>
+push</em> a plate on to the stack. If you decide to take a plate off of the top of the stack, you
+are said to <em> pop</em>
+ a plate from the stack. Here's how it works.<br/><br/>
+
+@gimmeanh = ( n, n, n,);<br/>
+
+# Print out the gimmeanh array before the push<br/>
+print "$gimmeanh[0]\n";<br/>
+print "$gimmeanh[1]\n";<br/>
+print "$gimmeanh[-1]\n\n";<br/>
+$size=($#gimmeanh);<br/>
+print "array size is $size\n";<br/>
+
+# use the Push command to add an h<br/>
+
+push (@gimmeanh, "h");<br/>
+
+# Print out the array with the h included<br/>
+print "$gimmeanh[0]\n";<br/>
+print "$gimmeanh[1]\n";<br/>
+print "$gimmeanh[2]\n";<br/>
+print "$gimmeanh[-1]\n\n";<br/>
+$size=($#gimmeanh);<br/>
+print "array size is $size\n";<br/>
+
+# use pop to remove the h<br/>
+pop (@gimmeanh);<br/>
+print "$gimmeanh[0]\n";<br/>
+print "$gimmeanh[1]\n";<br/>
+print "$gimmeanh[-1]\n\n";<br/>
+$size=($#gimmeanh);<br/>
+print "array size is $size\n";<br/><br/>
+
+We have also introduced the way you can get the size of an array, this is the
+$sizeofarray=($#whateverarray) bit. Note that if there are three elements numbered
+0, 1, and 2, the $# returns the array number of the last elements, so in the
+first case, it will be two, not three.
+First, we declare the array gimmeanh, it contains a list of three characters, each an n.
+After we print it, we push the character h onto the array, we still have the three
+ n characters, but the array now has an extra element containing an h. After we pop
+the array, the h has been removed, and the last element is now the third n.
+
+As well as push and pop, there are shift and unshift functions.  What shift does is let the first person in
+the queue in, making the queue shorter. Shift actually returns the value of the first element
+in the array also, and unshift is just the inverse.
+
+</p>
+<p>
+Arrays can also be altered using the  <em> splice </em> function.
+The splice function can replace some elements of an array, and replace or remove them.
+Here is an example.<br/><br/>
+
+# create an array<br/>
+@array = (a, e, i, o, u, b, c, d, f, g,);<br/>
+
+#print out the array<br/>
+print "@array\n";<br/>
+
+# splice the consonants with more vowels<br/>
+splice (@array, 5, 5, (a, e, i, o, u,));<br/>
+
+#print out @array2<br/>
+print "@array\n";<br/><br/>
+
+The splice function takes three arguments. The first is an array, the second is
+the element where we want to start replacing things, as it starts counting at
+zero, it will start off with the letter b. The next number tells it how many
+elements to replace, and the third argument is a list with that number of elements.
+So, in this case, the consonants will be replaced with another list of vowels.
+We can also take a <em> slice </em> out of an array, that is, copy a slice of one
+array into another. This is easy to do.<br/><br/>
+
+# create an array<br/>
+@array1 = (a, e, i, o, u, b, c, d, f, g,);<br/>
+
+#print out the array<br/>
+print "@array1\n";<br/>
+
+# slice the first five elements of @array1 and assign them to @array2<br/>
+@array2 = @array1[0, 1, 2, 3,4,];<br/>
+
+#print out @array2<br/>
+print "@array2\n";<br/><br/>
+Note that array1 has not been changed, the slice is copied, not removed, and there is no
+slice function as such. Lastly, arrays and lists have functions like sort and reverse,
+which are used as in @sorted = sort @jumbled.
+
+
+
+
+<br/> <a href="#begin"> Back to list of contents </a>
+
+
+</p>
+
+
+</blockquote>
+
+<h1 align="center" > <a name="hash1"> Associative Arrays (Hashes) </a> </h1>
+
+<blockquote>
+<p>
+There are cases where it is desirable not to use index numbers but something that is associated
+with the item in the array. For instance, instead of accessing clubmember(034) it might be
+clearer to have something like clubmember(fatfreddie). This is achieved through an associative array, or </em>hash</em>. This is the way it works, a hash is declared using the percent symbol
+like so <br/><br/>
+
+%members_owe=("fatfreddie"=>"£34","bigjohn"=>"£0","tightjimmy"=>£1190",)<br/><br/>
+
+Note, that the same thing can be achieved by using commas instead of using =>, but it's
+clearer whats going on in the above example, its tightjimmy that owes us big time.
+To print  out what fatfreddie owes, you need the line<br/><br/>
+
+print "Fat Freddie owes $members_owe(fatfreddie)\n";<br/><br/>
+
+So, in a hash, an element is accessed using a <em>key</em>, we can store all the data of a
+hash into an ordinary array using the keys function as follows<br/><br/>
+
+@moneyowed=keys %members_owe <br/><br/>
+
+Note that we can have arrays of hashes, hashes of arrays, and indeed hashes and hashes
+as you might have already seen using perldoc.
+
+<br/> <a href="#begin"> Back to list of contents </a>
+
+</p>
+</blockquote>
+
+<h1 align="center"  > <a name="Control1"> Control Structures </a> </h1>
+
+<blockquote>
+<p>
+If you are familiar with any programming at all, you will be familiar with the concept of control structures. For instance, a test might be made on some condition during the program, and
+the result of that test may affect which pieces of code are executed later on. This is done
+using if statements. For instance <br/><br/>
+
+if(5<2){ <br/>
+    print "THIS NEVER GETS PRINTED\n"; }<br/>
+else<br/>
+{<br/>
+print "THIS ALWAYS GETS PRINTED\n";<br/>
+}<br/><br/>
+The &lt means less than, a &gt would mean greater than, then there are &gt= greater or equal to, and &lt=
+is less than or equal to. You can make logical variables like this.
+<br/><br/>
+$result1=5<2;<br/>
+$result2=6<7;<br/>
+if(result1==True){<br/>
+	print "Five is less than two\n";<br/>
+	}<br/>
+	elseif(result2)<br/>
+	{<br/>
+	print "Six is less than seven\n";<br/>
+	}<br/>
+	else<br/>
+	{<br/>
+	print "We never arrive here\n";<br/>
+	}<br/><br/>
+What is happening here? Perl tests the expression 5 &lt 2 and stores the result False in
+the variable result1. The if statement tests whether the result1 contains a True (or 1).
+Note that there are two equal signs, a single equals sign is an <em> assignment </em> operator,
+meaning that result1=True assigns the value True to result1 regardless of the fact that 5 is not less than two. To test whether something is equal to something you need the equality operator ==. Next comes any number of statements you like in between the a pair of braces. The if statement can stop here, and the code between the braces is executed. Otherwise, there are
+two options, an else followed by statements between braces, or an elseif. You can nest things
+as deeply as you like. In this case, since result1 is False (or anything but 1) it does
+another test on result2, since it's true, we print out that six is less than seven. Next comes an else, which naturally we never get to.<p>
+
+<p>We can also have AND, OR, XOR, NOT operations, if( (stuff) and (otherstuff) ) for instance,
+which tests true if stuff is true and if otherstuff is also true. Alternatively, && means and,
+|| means or, ! means NOT, and != means not equal to. There is no symbol for xor, you just type xor. Similarly for strings, you have eq for equals, ne for not equal to lt for less than, gt for grater than and so on. (Here greater than etc mean alphabetically) There are also bitwise operators, but we shan't go into that here.
+Similar to an if statement is the unless statement<br/><br/>
+
+$numb=5;<br/>
+unless($numb==5){<br/>
+	print "it isn't five\n";<br/>
+	}<br/>
+	else<br/>
+	{<br/>
+	print "it is five\n"; }
+<br/><br/>
+Now we get to control loops, here is a <em>while </em>loop<br/><br/>
+print "guess my number, it's from 0-9\n";<br/>
+	while(<STDIN> != $numb){<br/>
+	print "try again\n";<br/>
+	}<br/>
+print "Got it!\n";<br/>
+for ($i=1; $i<10; $i++){<br/>
+	print "$i\n";	}<br/><br/>
+This while loop tests anything coming from the standard input, and tests whether
+it's five or not. After the test in the while statement, it executes any code placed
+within the braces. If the test is false, it goes back to the beginning and tests the
+next standard input. Once something tests True, the program proceeds to the first
+line of code after the braces. Here is a do while loop.<br/><br/>
+$i=0<br/>
+do{<br/>
+i++;<br/>
+print "$i\n";<br/>
+   }while(i<10);<br/><br/>
+The ++ is an increment operator, it can either be ++i or i++, test out the difference
+for yourself. It adds one to i, we might have had i=i+3 instead, or its equivalent i +=3. The
+above loop executes the code in the braces, tests the condition at the end, and if it's
+still true, goes back to the beginning of the code block in the braces and starts over again.
+When $i reaches 10, it leaves the loop and continues executing.
+Another favourite is the for loop.<br/><br/>
+
+  for ($i = 0; $i < 2; $i++) {<br/>
+    print "$i\n";<br/>
+  }<br/><br/>
+Here, there are three arguments, separated by semi-colons, the first usually initialises some number, the second is a logical expression, the third is some statement, usually incrementing
+the first number. Similar to a while loop is an until loop until(x>6){ code block}. Lastly, for processing arrays, there is the foreach loop.<br/><br/>
+
+
+
+
+@names=qw(fred, harry, jane, mary);<br/>
+
+print "array length is $#names\n";<br/>
+
+# much more efficient for arrays<br/>
+foreach $moniker (@names){<br/>
+	print "$moniker\n";<br/>
+	}<br/><br/>
+
+<br/> <a href="#begin"> Back to list of contents </a>
+
+</p>
+</blockquote>
+
+<h1 align="center" > <a name="sub1"> Subroutines </a> </h1>
+<blockquote>
+<p>
+Any large code should be split up into manageable chunks called subroutines. Even so, sometimes
+these chunks might be difficult to keep small. Here is an example of a perl subroutine <br/><br/>
+
+
+
+#subroutines are called using an ampersand<br/>
+#<br/>
+$success=&printname;<br/>
+
+unless($success==0){<br/>
+	print "subroutine failed";<br/>
+	}<br/>
+print "return value= $success\n";<br/>
+sub printname{<br/>
+ 	print "Dave\n";<br/>
+	return 0;<br/>
+	}<br/><br/>
+Here, the name of the subroutine is printname. At the end of the main code, you can have
+any number of subroutines. All you need is <br/><br/>
+sub subroutinename{<br/><br/>block of code<br/><br/>)
+<br/><br/>
+ Subroutines
+in general will return a value, indicating whether or not the subroutine managed to
+do its job. Perhaps there is a divide by zero, for instance, which has been tested for, and
+the subroutine reports that the answer is garbage by returning a non zero value. Perhaps
+the subroutine does some tests, and a case number between 1 and 10 tells the main programme
+how to continue. At any rate, here a return value of zero indicates success. A subroutine
+is called simply by placing an ampersand in front of the subroutine name.
+Generally speaking, subroutines usually appear together at the end of the main
+programme, but they can be put anywhere you like. Values can be
+passed to subroutines as follows<br/><br/>
+
+
+
+#<br/>
+# the arguments are put into an array called _  (Yes underscore)<br/>
+#<br/>
+#<br/>
+
+&names("Fat Freddy\n", "Fat Freddie's Cat\n");<br/>
+sub names{<br/>
+	print "array length=$#_\n";<br/>
+	print "@_[0]";<br/>
+	print "@_[1]";<br/>
+	return @_;<br/>
+	}<br/><br/>
+The values are passed into an array @_. The subroutine might return an array of
+data  simply by using return @_.
+</p>
+
+<p>
+At this point, we must introduce the idea of <em> referencing</em>. Here is an
+example.<br/><br/>
+
+$number=5;<br/>
+$reftonumber=\$number;<br/>
+print "$"number is equal to 5\n";<br/>
+print "reference to number is $reftonumber\n";<br/>
+print "$$reftonumber is stored at $reftonumber;<br/>
+#samething<br/>
+print "${$reftonumber} is stored at $reftonumber;<br/><br/>
+
+Here for a scalar, the \ operator creates a reference to the variable $number. A
+reference is always a scalar, and it contains the hexadecimal address of $number. To see what's
+in the address, you <em>dereference</em> $reftonumber using $$reftonumber. Here's how it
+works for arrays and hashes.<br/><br/>
+
+@array=(1,2,3,4,5,6,7,8,9,);<br/>
+%hash=(pet=>Cat,owner=>"Fat Freddie");<br/>
+
+$refarray=\@array;<br/>
+$refhash=\%hash;<br/>
+
+print " array is @array\n";<br/>
+print " owner of $hash{pet} is $hash{owner}\n";<br/>
+
+
+print " array is @{$refarray}\n";<br/>
+print " owner of ${$refhash}{pet} is ${$refhash}{owner}\n";<br/>
+
+print "fourth array element is ${$refarray}[3]\n";<br/>
+print "fourth array element is $refarray->[3]\n";<br/>
+
+print "${$refhash}{owner}\n";<br/>
+print "$refhash->{owner}\n";<br/><br/>
+
+Again, the slash gives the scalar a reference to the data, and there are two ways
+of accessing the data through the reference. That's either using ${$ref} or $ref->.
+</p>
+
+<p>
+Now, the thing about passing data to a subroutine is that <em>copies</em> of the
+data are passed into the @_ array. Firstly, this can create a lot of work and be very inefficient. Secondly, the copies go out of scope and vanish when the subroutine
+returns. So, if you wanted to swap two arrays in the subroutine, you would have
+swapped the copies, which no longer exists. If the subroutine is to change the
+data given to it, you must pass by reference. Another point is, that if you pass
+by reference, you can unscramble the data from the @_ array. Here's an example
+where the subroutine arguments are passed by reference.<br/><br/>
+
+@array1 = (1, 2, 3,4); @array2 = (5, 6, 7, 8);<br/>
+print "@array1 \n";<br/>
+
+$iret =&AddArrays(\@array1,\@array2);<br/>
+
+
+print "@array1 \n";<br/>
+
+sub AddArrays(\@array1, \@array2){<br/>
+        my ($rarray1, $rarray2) = @_;<br/>
+        $len2 = @$rarray2;  # Length of array2<br/>
+        for ($i = 0 ; $i  < $len2 ;  $i++) {<br/>
+            $rarray1->[$i] += $rarray2->[$i];<br/>
+        }<br/>
+  return 0;<br/>
+}<br/><br/>
+The first line gets us our arrays back. The my keyword emphasises that the references
+rarray1 and rarray2 are local variables. Now, $rarray->[i]=rhs means that whatever the rhs
+is, its stored at the address of array[i], so array[i] gets changed on returning to the main programme.
+</p>
+<p>
+Scalars are assumed to be global, but to say they are explicitly use the "our" command<br/><br/>
+our $globalval=100;<br/><br/>
+
+Also there is local, in a subroutine, the local variable is created, but vanishes when the
+subroutine is executed<br/><br/>
+local $localvariable=50;<br/><br/>
+and then there is "my" which means its local to the current "block"<br/><br/>
+# a block is between braces<br/>
+{<br/>
+By a block, we mean any block of code in parentheses. Finally
+ there are the exists and defined keywords to test to exactly that <br/>
+#subroutine exists or is defined<br/><br/>
+
+$logical1=&mysubroutine if defined mysubroutine<br/>
+$logical2=&mysubroutine if exists mysubroutine<br/><br/>
+
+This should be enough to get started on subroutines, but we shan't go into further detail here.
+
+
+<br/> <a href="#begin"> Back to list of contents </a>
+
+</p>
+</blockquote>
+
+<h1 align="center" > <a name="file1"> Working With Files  </a> </h1>
+<blockquote>
+<p>
+To actually do any real programming at all, we need to work with input and output files.
+This is actually a fairly big subject, as you can tell from perldoc, but much can be
+done with just a few basics. Files are identified by  <em>filehandles</em>, and files
+are accessed via the open function, filehandles are conventionally written in the upper case.
+Here is the simplest case.<br/><br/>
+
+$fname1="data1.txt";<br/>
+$fname2="data2.txt";<br/>
+$fname3="data3.txt";<br/>
+$fname4="data4.txt";<br/>
+
+
+open(F1,"$fname1") or die "Can't open file $fname1:$!\n";<br/>
+flock(F1,FLOCK_SH);<br/>
+open(F2,"&gt $fname1") or die "Can't open file $fname1:$2\n";<br/>
+flock(F2,FLOCK_EX);<br/>
+open(F3,"&lt $fname1") or die "Can't open file $fname1:$3\n";<br/>
+flock(F3,FLOCK_SH);<br/>
+open(F4,"&gt&gt$fname1") or die "Can't open file $fname4:$!\n";<br/>
+flock(F4,FLOCK_EX);<br/>
+
+
+#do stuff with files<br/><br/>
+
+
+flock(F1,FLOCK_UN);<br/>
+flock(F2,FLOCK_UN);<br/>
+flock(F3,FLOCK_UN);<br/>
+flock(F4,FLOCK_UN);<br/>
+close(F1)<br/>
+close(F2)<br/>
+close(F3)<br/>
+close(F4)<br/><br/>
+
+
+Here, the files data1 to data5 are given the filehandles F1 to F4, data1 is opened as
+a read only file, data2 is opened for writing, if it already exists it is deleted.
+The data3 file is also read only, while data4 is opened for appending. The existing data
+is kept, and further data can written at the end of the file. Now, the open function
+returns True or False, so we might add some code to handle the case. The or die bit means
+that if the file cannot be opened, for instance you might not have read permission for
+the file, the programme prints out the message and stops dead right there. The $! is another
+special variable that contains error codes.
+</p>
+<p>
+Not only have we opened the files, but we have used the flock function on them. (Note,
+flock must be on your system, for unix and linux it will be, otherwise flock will crash the
+programme.) The file locking function is very useful where lots of scripts are running on a
+system. What it does is lock the file, so that no other script can read from or write to  the
+file while the current script is using that file. The other scripts will just wait until
+either the file is unlocked or closed by the script that has access to it. The operations
+FLOCK_SH, FLOCK_EX, and FLOCK_UN are, lock for read access, lock for write access and unlock.
+<em>Note that if the other scripts are not using flock, they can access the file, flock
+only locks the files to other scripts using flock.</em><br/><br/>
+
+There are lots of queries that one might ask of a file, for instance, does it exist. These
+are performed by -operator("filename");, the existence operator is just an e, so<br/><br/>
+
+if (-e("file.txt")) {<br/>
+print "File doesn't exist\n"<br/>
+#take action here
+}<br/><br/>
+writes out a error messages if the file doesn't exist.
+Before we list these operators, a word about real and effective uid/gid (user id/group id).
+The effective uid is that of the user to whom the file belongs, the and not the UID of the user reading or writing to the file. Here is a list of some of the operators returning True or False (except in the case of the number of days ones) that can
+act on the file name.<br/><br/>
+
+ -r File is allowed to read by effective uid/gid<br/>
+ -w to write <br/>
+ -x to execute <br/>
+ -o belongs to effective uid (user identificator) <br/>
+ -R File is allowed to read by real uid/gid <br/>
+ -W to write <br/>
+ -X to execute <br/>
+ -O belongs to real uid <br/>
+ -e file is existed <br/>
+ -z empty <br/>
+ -s not empty <br/>
+ -f general text <br/>
+ -d folder <br/>
+ -l symbolic link <br/>
+ -T text file<br/>
+ -B binary<br/>
+ -M file "age" in terms of days from the moment of script start<br/>
+ -A days from last reading <br/>
+ -C days from last inode modification <br/><br/>
+ Reading a whole file in one go is as easy as<br/><br/>
+
+ @all_lines = &lt F1 &gt;<br/><br/>
+    foreach $line (@all_lines)<br/>
+    {<br/>
+        chomp($line);<br/>
+    }<br/><br/>
+
+Each element of all_lines contains a whole line of the file. The chomp bit is a good idea
+because it removes new line characters. Writing to a file is just as easy,<br/><br/>
+
+print F3 "This is the first line\n";<br/>
+print F3 "This is the second line\n";<br/><br/>
+
+There are other functions that can act on files, but only two more are mentioned here, read and
+Getc.<br/><br/>
+
+read (F1, scalar, length);<br/><br/>
+
+This reads a specified number of bytes from the file to the scalar variable and returns number of bytes read.
+
+ getc (F1);
+
+Gets the next character from the file with filehandle F1.
+
+
+
+<br/> <a href="#begin"> Back to list of contents </a>
+</p>
+</blockquote>
+
+<h1 align="center" > <a name="objects"> Classes of Objects and OOP in Perl  </a> </h1>
+
+
+
+<blockquote>
+<p>
+
+This is only a very brief introduction to object oriented programming in perl. The <em>class</em>
+of object shall be a cat. Now a cat can have data, its age, weight, and so on, but it can
+do things perhaps like, eat, sleep, run, climb, and so on. So the cat has data, but also
+has functions or <em>methods</em>.
+
+Any instance of a cat has to be constructed using a special subroutine, the constructor, called new. Here is a constructor function, plus a list of methods. This is stored in a file CAT.pm.
+Here .pm stands for perl <em> module </em>, we shall see more of these later when we look
+at CPAN later. For the present, here is a listing of CAT.pm (upper case is often used for modules. In perl, classes <em>must</em> be defined in perl modules.<br/> <br/>
+
+package CAT; <br/>
+
+# constructor for cat is the new keyword <br/>
+sub new{ <br/>
+
+	my $cat={ <br/>
+	}; <br/>
+	$nclaws=4; <br/>
+	$nteeth=20; <br/>
+	$catage=3; <br/>
+	bless $cat; <br/>
+	#initial data for cat <br/>
+
+	return $cat; <br/>
+
+
+	} <br/>
+
+#functions for cat after constructor <br/>
+sub claws{print "Pussykins has SHARP claws\n!"; <br/>
+	} <br/>
+sub teeth{ <br/>
+	print "Pussykins  has SHARP teeth\n"; <br/>
+	} <br/>
+sub fur{ <br/>
+	print "Pussikins has soft fur\n"; <br/>
+	} <br/>
+sub getage{ <br/>
+	return $catage; <br/>
+	} <br/> <br/>
+
+
+return 1;   # MUST return 1 so that success in construction is known!<br/>
+
+#<br/>
+# note syntax<br/>
+# package NAME;<br/>
+# sub new{ cat construction }<br/>
+# cat public functions<br/>
+# return 1<br/>
+
+
+
+The first thing to notice is the package keyword. This must be used, and CAT is
+to be the name of the package. Then comes the cat constructor, any constructor is defined
+in a subroutine called new. Then comes cat={}; followed by any initialisation of data
+for the cat. The <em> bless </em> keyword <em> must</em> be used to turn our cat into a class.
+It also makes sure that any instance of a cat accesses the the cat member functions. For instance
+a dog might also have a fur function, which might be different from a cat's fur function.
+
+After that come
+the cat's methods, which is just a list of subroutines. Right at the end, there is a return 1;.
+Now we have our first .pm file, we write a simple cats.pl programme which uses it.<br/><br/>
+
+require 'CAT.pm';<br/>
+use CAT;<br/>
+
+$tiddles=new CAT;<br/>
+
+# also can use $tiddles=CAT->new();<br/>
+
+$tiddlesage=$tiddles->getage();<br/>
+$tiddlesage=$tiddles->teeth();<br/>
+$tiddlesage=$tiddles->claws();<br/>
+$tiddlesage=$tiddles->fur();<br/>
+
+print "This cat's age is $tiddlesage \n";<br/><br/>
+
+The require and use statements must be there for cats.pl programme to use the
+subroutines in the CAT.pm file. Next, we declare a new cat. This calls the constructor
+function which also initialises the data. After which, we access the cat's methods
+in turn. That's about the simplest class of object you can make, we have included it here
+just to make a note that perl is an object oriented language. We may add further and more complicated examples of OOP in perl, but at the moment, this is not a priority.
+
+
+
+
+
+<br/> <a href="#begin"> Back to list of contents </a>
+</p>
+</blockquote>
+
+
+
+<h1 align="center" > <a name="strings"> Working With Strings </a> </h1>
+
+<blockquote>
+<p>
+Perl has a lot of string handling facilities, we have already come across chomp, which deletes
+the end of string character, and returns the number of symbols deleted. (It can be used
+on a list or array of strings and will delete the end of string character from each string. There
+is a chop function which does does almost the same thing except it removes the last character as well. Then there is Che, Che(65) returns the character "A", since 65 is the ASCII code for "A".
+Strings can be converted to upper or lower case using the Cu and LC functions. The length function returns the string length, and there are quite a few other functions. </p>
+<p>
+So far we have used double quotes for strings (or string literals), however strings can be
+in single quotes. This won't do for 'This won't do' because the interpreter will see a string
+'This won' and give you an error for the following  t do'. "This won't do" will be fine.
+We could have 'This won\'t do' though, the backslash tells perl that ' is an escape character.
+Similarly, "and I quote \"Never do that again\"" will be fine to. Other escape characters
+include \b for backspace \e for escape, \t for tab, \@ for ampersand, \$ for dollar, \r for return and so on.</p> Now, <em> you can use back quotes to run programmes or system commands</em>.
+So for instance, in unix, you could have a line in perl <br/> <br/>
+print `ls  > stifles.txt<br/><br/>
+then open the list of files, and process each file in whatever way after stifles
+has been opened and read.
+
+<p>
+Now, all these backslashes might make life a little tricky sometimes, so there also the operators q/string/ and qq/string/. Though slashes are often used, they can be replaced with
+any non alphanumeric character, so q!This Won't do! will be the same as 'This won\'t do', and
+qq?and I quote "Never do that again"? is the same as "and I quote \"Never do that again\"".
+Another operator QC/string/ replaces the back quote to run the system command, that is you would
+do something like print qx^source ./myscript.sh^;. Another useful operator is qw which
+operates like this.
+<br/><br/>
+@array=qw(Now is the time for you people to clap your hands in delight);<br/><br/>
+which stores each word into an array. Another way to do this, which is more
+flexible is to use the split function. Examples are<br/><br/>
+
+($a, $b, $c,)=split(/ /,"Now is the time for all, 3");
+
+Here, the three is the maximum number of strings that the original is to be split into, the
+/ / tells it to split at a space (we could have used \s+ the string terminator) so $a="Now",
+$b="is" and $c="the time for all. A negative number will be a limitless number of splits,
+but the number can be left out altogether. In fact, we might want to split the string for other
+occurrences too, split(/[., \s+]/,"whate.ev.ryo,want is mine") will split whenever it sees a period, a comma, a space, or a string terminator. split(//,"fhgadkjgh;dkfj" will put each character into an array.</p>
+
+<p>Now we have arrived at the topic of perl's <em> regular expressions</em>, which is
+one of perl's most powerful features, and not easy to grasp the first time over (or the second or third for that matter). Starting at the shallow end, so to speak, ("Hello World!"=~/World/)
+returns True because World is found in the string, if we had used the operator !~ instead, the
+opposite is true, in this case you want to know if World is not in the string. The right hand side could be any string variable /$searchfor/, say. If we had put $_="Hello World" we
+would just have (/World/). The matches are case sensitive, so /world/ wouldn't show up as
+a match, but /o W/ would, this returns true if either o or W are in the string. Note that
+/World / would not match, there is no space after the d in world, just the string terminator.
+Matches for things like "[\	/{"  are done like ("string"=~/\[\t\/\{/). Commonly, you might
+want to match something with the beginning of string, this is done using the ^ symbol.
+=~/^start/ will match startup, but not upstart. Similarly $ is used for matching the
+end of a string /start$/ would match upstart, (/^start$/ would match startupupstart.</p>
+
+<p>
+Square brackets take on the following meaning,
+=~/[bcr]at/  would match cat, bat, and rat. =~/[aA][bB][cC]/ would match AAbbCc or aABbcC
+for instance. Alternatively =~/abc/i flags up that we want a case insensitive match. The 'i'
+is an example of a modifier. We can also specify ranges with the minus sign, so =~/[0-9][a=z][A=Z]/ would match up with 2A, 3q, or 0X. However there are \d, a digit, \s for
+whitespace, \D for a non digit, and \S for anything that is not white space. The period '.'
+matches anything except a new line. Also, there is a word character and a non-word character
+(a word character is alphanumeric but will also match an underscore) which are \w and \W.
+There are other modifiers, used in the same way as 'i'. These are s, m, and sm. These
+mean, treat the string as a single line, split the string into multiple lines and sm is
+treat as single string but detect multiple lines. There is more, we might want a match  if the string "cat" or "dog" or "mouse" is present. What we do here is /cat|dog|mouse/.</p>
+
+<p>Not only can you match patterns, you can do a search and replace. The s operator searches, s/whatever/tobefound/nonsense
+will search a string for "tobefound" and replace it with nonsense, a variation on this is tr, which will search a string for
+a table of values, and replace anything found with an item in a corresponding table.
+There is a lot more than mentioned here, but perldoc perlfaq6 will help if you're stuck.
+
+
+
+
+<br/> <a href="#begin"> Back to list of contents </a>
+</p>
+</blockquote>
+
+<h1 align="center" >  <a name="cpan1"> CPAN</a> </h1>
+
+<blockquote>
+<p>
+The Comprehensive Perl Archive Network <a href ="http://www.cpan.org">CPAN</a> is an extremely  valuable resource. Pretty well anything
+you might want to do has already been done, and done very well at that, and whoever did it will have uploaded it as a perl module. You
+can download it using the cpan shell. At the command line type <br/><br/>
+
+perl -MCPAN -e shell <br/><br/>
+
+but before you do this, make sure that lynx is installed on you're computer. (It's a text only browser). If you haven't got it, download <a href="http://moochers.com/LinuxSite/lbrowsers.html">
+lynx </a> and install it for free. Also, make sure that ncftp is installed. Now you type
+perl -MCPAN -e shell (return) at the command line and you are now in the CPAN shell. It shall ask you whether you want to configure. Say yes. and the configuration begins. This is pretty straightforward, if just hit return for everything except the numbers for the continent, country, and mirror sites it should go fine. If anything goes wrong run the cpan shell again, (just type cpan(return) at the command line and
+type 'o conf init' to configure from scratch (type commit at the end, or you keep the previous bad configuration). Now it's time to type "b(return)" to see what bundles you can download, or, for
+instance if your looking for Maths or PDL (Perl Data Language) type "i /Math/" or "i /PDL/. Try, install Bundle::Math and
+install PDL, install PDL::Math. (There is an awful lot of stuff here, including the PDL math library.)<br/><br/>
+
+All that said and done, it is often preferable to download after a <a href="http://www.search.cpan.org"> CPAN search </a>. For instance,
+type "quantum" into the search field, and you will see "Quantum::Entanglement in the list. Below this it says  QM entanglement in Perl,
+and below that is another link QM-entanglement-0.32. Click on that link and the two options at the top are download and browse. Decompress the tarball and do tar -xvf on the tarfile, and there you have it. Make sure you read any INSTALL and DEPENDENCIES files, and check for any configuration files. For instance, the PDL download has a file called perldl.conf. In this configuration file, there is a line that
+reads "WITH_3D undef," which, on some linux systems,  makes the install fail. This is despite having mesa installed (mesa being the linux
+openGL workaround). (If so, change the undef to 0.) To install, do "perl Makefile.PL" or if there is a something.conf file which you must edit, do "perl Makefile something.conf". (This is why using the CPAN shell is sometimes inconvenient.) Now, do "make", and then <em> as root </em> do make install. Once installed, perldoc can help as well, eg "perldoc Math::Spline" or "perldoc PDL" (note perldoc doesn't document
+entire bundles so "perldoc Math" won't work.
+
+
+
+
+
+<br/> <a href="#begin"> Back to list of contents </a>
+</p>
+</blockquote>
+<p>
+<a href="index.html"> Back Home </a>
+</p>
+
+
+</body>
+</html>

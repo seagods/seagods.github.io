@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name=Description" content="Migrating to linux">
+<title> Chris Godsalve, Migrating To Linux (or Kill Bill!)</title>
+
+<style type="text/css">
+@import url(cochise.css);
+</style>
+
+</head>
+<!-- Background white, links blue (unvisited), navy (visited), red
+(active) -->
+<body>
+
+<h1> Migrating to Linux </h1>
+
+<ol>
+<li> <a href="#redhat">Redhat Trouble </a> </li>
+<li> <a href="#BT"> BT voyager Modem Trouble </a></li>
+<li> <a href="#zoom"> Port Forwarding or Virtual Hosting on the Zoom ADSL X3 </a></li>
+<li> <a href="#scanner">Magic place for scanner firmware with good instructions </a></li>
+<li> <a href="#DVD"> DVDs </a></li>
+<li> <a href="#nvidia"> Nvidia Graphics 3D acceleration</a> </li>
+</ol>
+
+
+<p>I finally managed to kick the PC habbit of using microsoft windows, it was a case of KILL BILL.
+Why did I finally see sense? Well, first of all, I realised that I had been conned by
+Time Computers. There I was, thinking that my windows reload disc actually had windows
+on it! But, after a year, I was looking through the manual for something or other, and I found
+that windows was actually on a secret and inaccessible partition on the hard drive, and all the reload disc
+did, was to tell this secret bit of the disc to install windows on the C: partition.
+This meant that if my hard drive went west, I would have to go out and buy windows as well as a new hard drive. As far as I was concerned, I had paid for windows and got my windows licence when I paid for
+my computer. Lesson number one, beware of OEM (Other Equipment Manufacturers). </p>
+
+<p>Next, I downloaded the redhat discs, and burned the CDs, if you try this with windows, it won't
+work! Windows XP cannot burn .iso files, and the redhat shrike discs are .iso files. Never mind,
+you can download <a href="http://isorecorder.alexfeinman.com/isorecorder.htm"> isorecorder </a> and away you go. The next thing, despite researching how to dual boot a PC, I mucked it up, and lost the secret
+partition, and so I lost windows XP. Never mind, I still had the redhat discs. I had migrated to
+linux for good, I wasn't going to pay Bill Gates twice over, no matter no-what, nohow, noway. Oh yes, and all the info on the motherboard was on the hidden partition too.
+<h1> <a name="redhat">Redhat Trouble</a> </h1>
+
+<p>So, I installed redhat, everything seemed fine, until I shut down the computer. This is probably
+a machine dependent thing, but when I switched off my machine, it got to power down, and then hung.
+Oh, I thought, that probably means you switch off now. No, if you see all the shutdown messages, and
+it just stops at powerdown, something is wrong: redhat doesn't understand your machine. Is this
+a problem? Yes. It will corrupt the hard drive occasionaly, and you have to re-install redhat. Not only
+that, as time goes by, one of those CDs you burned might corrupt too, One of mine certainly did.
+At this point, I went  out and bought SuSE Linux professional 9.0, and started again. </p>
+
+<h1> <a name="BT">Modem Trouble</a></h1>
+
+<p>Now, I had installed linux, my BT modem wouldn't work, so, no internet. The next step was to go to an
+internet caffe and search. There seems to be only one solution, and that is <a href="http://eciadsl.flashtux.org"> ECIADSL </a>. Now, the instructions are fairly involved, and you have to be very careful
+that you have downloaded exactly the right firmware, but apparantly this can be got to work. It might have been me, or it might be machine dependent, but I could not get it to work at all. In revenge for the BT modem, I decide at this point
+to get rid of BT broadband, and in the end, I joined up with <a href="http://www.uklinuxadsl.net"> uklinux ADSL</a> and I
+am  with <a href="http://www.uklinux.net"> UK Linux </a> as I write.</p>
+
+<h1> <a name="zoom">Zoom ADSL modems </a> </h1>
+
+<p>So what next? I go out and buy and ethernet modem, a zoom ADSL X3, and an ethernet card to boot,
+and SuSE picks it up no problem. So, I am back in business, or so I thought. I wanted to run an
+Apache web server, so I have to tell the modem to allow me to do this. After many visits to
+<a href=http://www.linuxquestions.org> Linux Questions </a>, I still get no joy </a>. Then, I find
+a help number for the Zoom ADSL  on the internet, and after many phone calls, I find someone who has done it on redhat.</p>
+
+<p>The problem was that the manual (all examples in windows XP) is not only badly written, littered with
+errors, and its instructions for SuSE were out of date, but it's completely wrong! If you want to do
+port forwarding, here is what you do.</p>
+
+<ol>
+<li> At the command line do /sbin/ifconfig/eth0 </li>
+<li> Note the inet:addr </li>
+<li> Bring up your browser, type in http://10.0.0.2 in the address bar </li>
+<li> Username and password are as in the manual </li>
+<li> Go to Advanced Setup </li>
+<li> Go to Virtual Server </li>
+<li> Enter the inet addr number (10.0.0.something) under Host IP address</li>
+<li> For http services type in 80 for public and private address </li>
+<li> Flash and reboot the modem after save settings </li>
+<li> For SuSE, go to YaST-> Security and Users-> Firewall->Allow http access </li>
+</ol>
+
+<p>The manufacturer states that the "something" has to be <em> outside </em>
+a particular range, and can somehow be any number up to 255, whereas the inet addr:10.0.0.something is <em> inside </em> the range that it says it must not be in.
+It not only must be a number that <em> is </em> inside the range, but it must be the number given by ifconfig eth0. Also, for DSL connections, ignore all the linux instructions. These instructions
+<em> might </em> be needed for static IP's, but I think more recent distros will configure it for
+you anyhow, the SuSE instructions tell you that you must edit a file which no longer exists
+after SuSE 8.0.
+</p>
+
+<h1> <a name="scanner">Scanners </a></h1>
+
+<p>Any trouble with the scanners, go to <a href=http://www.meier-geinitz.de> Mier-Geinitz </a>
+and click on SANE. Read the instructions carefuly, especially the bit on editing the /etc/sane.d/whatever file. For me, whatever is gt68. In my own case
+the steps are, install the scanner from YaST, which tells you that
+a firmware upload is needed. Then I download sbfw.usb, and put it
+in /usr/share/sane/gt68xx. Finally I edit /etc/sane.d/gt68xx.conf
+and comment out the appropriate override and add a line that says
+ firmware="/usr/share/sane/gt68xx/sbfw.usb".
+</p>
+
+<h1> <a name="DVD">DVD players </a> </h1>
+
+
+<p>There you are with your legally owned dvd drive, and your legally owned copy of Kill Bill, and it
+it won't play because its illegal. Something to do with code cracking apparantly. If you're  naughty go to Xinehq on the internet, scroll down to the
+bottom where you'll see skyblade, click the more up to date bit, and follow the instructions carefuly.</p>
+
+<h1> <a name="nvidia"> NVIDIA 3D acceleration </a> </h1>
+
+<p>Now this is a pain, the NVIDIA driver is a dummy, with no 3D acceleration. What is more its
+not that trivial for a newbie to install it. First of all, you have to be in runlevel 3 to install it. Go to
+/etc/inittab and change the 5 in  id:5:initdefault to 3. This means that X windows won't start
+up on bootup. Get used to the command line, and get the basics of command line editing, I use vi.
+If you want to start windows after rebooting, you'll have to do "startx" at the command prompt.
+When you logout, you get back to the command line. To switch the machine off, you type "/sbin/powerd" at the command line (which only works as root). Go to the NVIDIA website, and download, for me at least, NVIDIA-Linux-x86-1.0-5336-pkg1.run. This is a shell script.
+</p>
+
+<p>
+Next, you must install the kernel source, which also installs gcc and make. Do an online kernel update too.
+Now, bring up the command line. If your in the bash shell, change to the c shell (just type csh).
+You must change to root now to proceed. Type "alias uname='uname -r'", then, "sh NVIDIA-Linux-x86-1.0-5226-pkg1.run" and agree to everything, and finally, type "sax -m 0=nvidia". Note that the NVIDIA-Linux script only runs if windows has not been started, but you have to run sax2 in windows, or it will fail.
+I got a warning about a conflict with rivafb from the NVIDIA-Linux shell, but everything worked just fine anyway.
+</p>
+
+<a href="http://seagods.stormpages.com"> Back to Chris' home page </a>
+
+
+</body>
+</html>
+ 
+

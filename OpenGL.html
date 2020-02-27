@@ -1,0 +1,1566 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="Description" content="Getting Started With OpenGL"><br/>
+<title>Chris Godsalve. Getting started with OpenGL</title>
+
+<style type="text/css">
+@import url(cochise.css);
+</style>
+
+</head>
+</center>
+
+
+<blockquote> Copyright &copy 2004 C. Godsalve, all rights reserved.</blockquote> <br clear="all" />
+<blockquote> Last update March 2007 </blockquote> <br clear="all" />
+<h1 align="center"> <a name="start">Getting Started With OpenGL</a> </h1>
+
+
+
+<ul>
+<li> <a href="#intro" > Introduction </a></li>
+<li> <a href="#pixel" > Plotting a Pixel</a></li>
+<li> <a href="#bitmap" > Showing a Bitmap</a></li>
+<li> <a href="#event" > Simple Events</a></li>
+
+<li> <a href="#triangle" >A Triangle in OpenGL</a></li>
+<li> <a href="#matrix" >The Matrix </a></li>
+<li> <a href="#camera" >A Camera Class </a></li>
+<li> <a href="#time" >A Little Timing </a></li>
+<li> <a href="#textures" > Textures </a></li>
+<li> <a href="#blendlight" > Blending and Lighting Effects </a></li>
+
+<li> <a href="#DisplayLists" > Display Lists </a></li>
+<li> <a href="#BitMapFont" > Using Bitmap Fonts </a></li>
+<li> <a href="#TrueTypeFont1" > Using TrueType-1 Fonts </a></li>
+<li> <a href="#TrueTypeFont2" > Using TrueType-2 Fonts </a></li>
+<li> <a href="#postscript" > Postscript Output </a></li>
+
+</ul>
+
+
+<h1 align="center"> <a name="intro">Introduction </a> </h1>
+<blockquote>
+<p>
+OpenGL is an open source graphics library, this means you can do all sorts of fancy 3D graphics for
+free. If you are running a linux machine, the chances are it came with the installation discs, and there
+will be a nice tool to install it for you. You can run OpenGL on windows, MacOS, and so on, so no more dll
+hell with direct-X. When we say OpenGL on linux, we mean of course Mesa, which actually is sort of OpenGL and
+not OpenGL at the same time: something to do with licences apparently. OpenGL is not dependent on what
+machine or operating system you have. This means, that in order to use it, you will need other software
+to interface between your system and OpenGL. So from now on, I shall only mention what's on my machine, and that is SuSE linux 9.0. On this system, you have two main choices GLUT, and SDL. The choice I made is SDL. Why?
+To be frank, I have no idea, except GLUT sounds wrong, Simple Direct (Media) Layer contains the word simple, and
+after trying simple startup code, I managed to get the one using SDL working. For now, that will be good enough for me.
+</p>
+<p>
+We shall be using g++ as our C++ compiler, but other computer languages can be used. (I couldn't get anything
+to compile with the Intel icc compiler). First off, make sure you have installed (for Linux) Mesa, Xfree86-Mesa, Xfree86-Mesa-devel, SDL, SDL-devel libraries, also make sure to uninstall the GLUT libraries.
+If you have compilation problems you may have forgotten to do that, else the you missed installing some of the
+SDL, Mesa, or XFree86 stuff.
+So, now for the first SDL programme, all we do is initialise SDL
+and then quit, well, it's a start. <br/> <br/>
+
+/*Use SDL_Init() to dynamically load and initialise the library. This function takes a set of flags <br/> corresponding to the portions you want to activate: <br/>
+
+SDL_INIT_AUDIO <br/>
+SDL_INIT_VIDEO <br/>
+SDL_INIT_CDROM <br/>
+SDL_INIT_TIMER <br/>
+
+/*Use SDL_Quit() to clean up the library when you are done with it. <br/>
+
+Tip: <br/>
+SDL dynamically loads the SDL library from the standard system library locations. Use the <br/> SDL_SetLibraryPath() function to use an alternate location for the dynamic libraries distributed
+ with your application. <br/> <br/>
+
+
+Example: from <a href="http://www.libsdl.org/intro/usinginit.html"> SDL.org </a>*/   <br/> <br/>
+#include &lt stdlib.h &gt  <br/>
+#include "/usr/include/SDL/SDL.h"  <br/>
+
+main(int argc, char *argv[])  <br/>
+
+{
+    if ( SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO) < 0 ) {  <br/>
+        fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());  <br/>
+        exit(1);  <br/>
+    }  <br/>
+    atexit(SDL_Quit);  <br/>
+    std::cout &lt &lt Hello, that was a success!\n";
+
+}  <br/> <br/>
+
+This lot compiles with  <br/>
+
+g++ -o Hello `sdl-config --libs  --cflags` Hello.cpp <br/> <br/>
+
+Now, locked away in the includes in SDL.h is SDL_video.h, which define data structures
+such as SDL_VideoInfo, and SDL_Pixformat. For instance, you could use the data from
+SDL_GetVideoInfo like this.<br/><br/>
+
+
+    //SDL_VideoInfo is a data structure defined in SDL.h which includes SDL_video.h<br/>
+    const SDL_VideoInfo* point_to_info = NULL;<br/>
+
+    const SDL_PixelFormat* pixformat=NULL;<br/>
+
+    point_to_info=SDL_GetVideoInfo();<br/>
+
+    int i=point_to_info->hw_available;<br/>
+    std::cout  &lt &lt "hardware available to create hardware surfaces "  &lt &lt i  &lt &lt std::endl;<br/>
+
+    i=point_to_info->wm_available;<br/>
+    std::cout  &lt &lt "window manager available "  &lt &lt i  &lt &lt std::endl;<br/>
+
+    i=point_to_info->UnusedBits1;<br/>
+    std::cout  &lt &lt "Unused Bits 1 "  &lt &lt i  &lt &lt std::endl;<br/>
+
+    i=point_to_info->UnusedBits2;<br/>
+
+    std::cout  &lt &lt "Unused Bits 2 "  &lt &lt i  &lt &lt std::endl;<br/>
+
+    i=point_to_info->blit_hw;<br/>
+    std::cout  &lt &lt "hardware to hardware blits accelerated "  &lt &lt i  &lt &lt std::endl;<br/>
+
+    i=point_to_info->blit_hw_CC;<br/>
+    std::cout  &lt &lt "hardware to hardware Colorkey blits accelerated "  &lt &lt i  &lt &lt std::endl;<br/>
+
+    i=point_to_info->blit_hw_A;<br/>
+    std::cout  &lt &lt "hardware to hardware alpha blits accelerated "  &lt &lt i  &lt &lt std::endl;<br/>
+
+    i=point_to_info->blit_sw;<br/>
+
+    std::cout  &lt &lt "Software to hardware blits accelerated "  &lt &lt i  &lt &lt std::endl;<br/>
+
+    i=point_to_info->blit_sw_CC;<br/>
+    std::cout  &lt &lt "Software to hardware Colorkey blits accelerated "  &lt &lt i &lt &lt std::endl;<br/>
+
+    i=point_to_info->blit_sw_A;<br/>
+    std::cout  &lt &lt "Software to hardware alpha blits accelerated "  &lt &lt i  &lt &lt std::endl;<br/>
+
+    i=point_to_info->UnusedBits3;<br/>
+    std::cout  &lt &lt "Unused Bits 3 "  &lt &lt i  &lt &lt std::endl;<br/>
+
+    i=point_to_info->video_mem;<br/>
+
+    std::cout &lt &lt "Video Memory (KB) " &lt &lt  i  &lt &lt std::endl;<br/>
+
+    pixformat=point_to_info->vfmt;<br/>
+    //this contains the pixel format<br/>
+
+    //would need pointer to an SDL pallete<br/>
+    // and to get pallet info, and SDL color array<br/><br/>
+
+We could delve ever deeper into the data structures, but, lets get on with it, and have a screen.<br/><br/>
+<br/>
+<a href="#start" > Back to list of contents</a>
+
+
+<h1 align="center"> <a name="pixel">Plotting A Pixel </a> </h1>
+
+Before we can plot up a pixel, we must declare an object of the type SDL_Surface, this we shall name, appropriately enough, screen. Now, SDL_Surface is a struct, and this consists of other structs, SDL_PixelFormat=SDL_Surface->format, and SDL_Rect, and some integers, w and h, for the width and height, pitch for the scanline length, pixels for a pointer to the pixel data,
+
+<br/><br/>
+
+    SDL_Surface *screen;<br/>
+
+    screen = SDL_SetVideoMode(640, 480, 16, SDL_SWSURFACE);<br/>
+    if ( screen == NULL ) {<br/>
+        fprintf(stderr, "Unable to set 640x480 video: %s\n", SDL_GetError());<br/>
+
+        exit(1);<br/>
+    }<br/>
+We declare an object of the type SDL_Surface, it's to be 640 by 480 pixels, and its to be 16 bit colour.
+The SDL_SWSURFACE is an integer valued flag, several flags can be used, the SW is Software, we could have
+SDL_HWSURFACE|SDL_DOUBLEBUF (to enable double buffering). What happens now?
+A screen should flash up and vanish as quick as it came. To keep the screen up, just put in a std::cin
+statement to read an integer afterwards, then the screen won't vanish till you enter something at the command line.  The next step is to draw a pixel. Let's look at the following function (see <a href="http://www.libsdl.org/intro/usingvideo.html"> using video">Using Video </a>).
+
+
+<br/><br/>
+
+void DrawPixel(SDL_Surface *screen, Uint8 R, Uint8 G, Uint8 B, int x, int y)<br/>
+{
+    Uint32 color = SDL_MapRGB(screen->format, R, G, B);<br/>
+
+    if ( SDL_MUSTLOCK(screen) ) {<br/>
+        if ( SDL_LockSurface(screen) < 0 ) {<br/>
+            return;<br/>
+        }<br/>
+    }<br/>
+    switch (screen->format->BytesPerPixel) {<br/>
+
+        case 1: { /* Assuming 8-bpp */<br/>
+            Uint8 *bufp;<br/>
+
+            bufp = (Uint8 *)screen->pixels + y*screen->pitch + x;<br/>
+            *bufp = color;<br/>
+	    std::cout &lt &lt "Case 1 " &lt &lt std::endl;<br/>
+
+        }<br/>
+        break;<br/>
+
+        case 2: { /* Probably 15-bpp or 16-bpp */<br/>
+            Uint16 *bufp;<br/>
+
+            bufp = (Uint16 *)screen->pixels + y*screen->pitch/2 + x;<br/>
+
+            *bufp = color;<br/>
+	    std::cout &lt &lt "Case 2 " &lt &lt std::endl;<br/>
+
+        }<br/>
+        break;<br/>
+
+        case 3: { /* Slow 24-bpp mode, usually not used */<br/>
+            Uint8 *bufp;<br/>
+
+            bufp = (Uint8 *)screen->pixels + y*screen->pitch + x;<br/>
+            *(bufp+screen->format->Rshift/8) = R;<br/>
+            *(bufp+screen->format->Gshift/8) = G;<br/>
+
+            *(bufp+screen->format->Bshift/8) = B;<br/>
+	std::cout &lt &lt  "Case 3 " &lt &lt  std::endl;<br/>
+
+        }<br/>
+        break;<br/>
+
+        case 4: { /* Probably 32-bpp */<br/>
+            Uint32 *bufp;<br/>
+
+            bufp = (Uint32 *)screen->pixels + y*screen->pitch/4 + x;<br/>
+            *bufp = color;<br/>
+	    std::cout &lt &lt  "Case 4 " &lt &lt std::endl;<br/>
+
+        }<br/>
+        break;<br/>
+    }<br/>
+
+    if ( SDL_MUSTLOCK(screen) ) {<br/>
+        SDL_UnlockSurface(screen);<br/>
+
+    }<br/>
+    SDL_UpdateRect(screen, x, y, 1, 1);<br/>
+}<br/><br/>
+Now, what is going on here? The essential point is that bufp is a pointer, and it takes the value
+screen->pixels+y*screen->pitch +x for the 8 bit case. What does it point to? It points to a pixel in the screen
+buffer,
+depending on what values are given for x and y, and its value is set to color. What was color? That was set
+  by  Uint32 color = SDL_MapRGB(screen->format, R, G, B), and that's it. The other stuff just locks the
+  screen, and unlocks it after all the changes are made, and then updates the screen. This is the normal procedure for drawing to the screen, we cannot allow any other object to interfere. Now, we can add the
+  following lines to the main function, just before the atexit statement. <br/> <br/>
+
+  int r=255,g=255,b=255,x=200,y=200;<br/>
+  void DrawPixel(SDL_Surface *screen, int r, int g, int b, int x, int y);<br/>
+
+  DrawPixel(screen, r, g, b, x, y);<br/>
+  std::cout >> y;<br/><br/>
+  and we could add things to read a bitmap file and call ShowBMP. The cin line will prevent the window
+  closing as soon as it is displayed, just type something at the command line and press return to get
+  rid of the window.
+
+<br/>
+
+ <a href="#start" > Back to list of contents</a>
+</p>
+</blockquote>
+
+
+<h1 align="center"> <a name="bitmap">Showing a Bitmap </a> </h1>
+<blockquote>
+<p>
+To show a bitmap, we must load it into an SDL_Surface struct using the SDL_LoadBMP function, then things
+are quite simple, we use SDL_BlitSurface to write it to the window, and update the rectangle. What does
+Blit mean? It's a method that copies a large number of bits from one area of memory to another very efficiently, think of Blitz, lightning fast, we hope.<br/><br/>
+void ShowBMP(char *file, SDL_Surface *screen, int x, int y)<br/>
+{
+    SDL_Surface *image;<br/>
+    SDL_Rect dest;<br/>
+
+    /* Load the BMP file into a surface */<br/>
+    image = SDL_LoadBMP(file);<br/>
+    if ( image == NULL ) {<br/>
+        fprintf(stderr, "Couldn't load %s: %s\n", file, SDL_GetError());<br/>
+        return;<br/>
+    }<br/>
+
+<br/>
+    /* Blit onto the screen surface.<br/>
+       The surfaces should not be locked at this point.<br/>
+     */<br/>
+    dest.x = x;<br/>
+    dest.y = y;<br/>
+    dest.w = image->w;<br/>
+
+    dest.h = image->h;<br/>
+    SDL_BlitSurface(image, NULL, screen, &dest);<br/>
+
+    /* Update the changed portion of the screen */<br/>
+    SDL_UpdateRects(screen, 1, &dest);<br/>
+}
+
+This is also from <a href="http://www.libsdl.org/intro/usingvideo.html"> using video </a>. I think it's fairly obvious what's going on here. I tried it with a bitmap saved using the Gimp 1.3, and it worked
+just fine!
+
+
+<br/> <br/>
+<a href="#start" > Back to list of contents</a>
+</p>
+</blockquote>
+
+
+<h1 align="center"> <a name="event">Simple Events</a> </h1>
+<blockquote>
+<p>
+Now, the cin line we had in Hello.cpp is a bit clumsy, but to make things more sensible, we need to get the
+window to listen out for events. Typically, whether for graphics or games, this is vital.
+The following is a simple code that opens a window, then loops until an event is "heard", and takes action. In this case the event is clicking the close button on the window, and the
+action makes it jump out of the loop, where it encounters the atexit statement.<br/><br/>
+
+<
+
+#include <iostream><br/>
+#include "/usr/include/SDL/SDL.h"<br/>
+#include "/usr/include/GL/gl.h"<br/>
+#include "/usr/include/GL/glu.h"<br/>
+
+SDL_Surface *Window=NULL;<br/>
+const unsigned short int SCREEN_DEPTH=16;<br/>
+
+// Prototypes for functions<br/>
+
+void MakeWindow(char *Name, int width, int height, int VideoFlags);<br/>
+void EventLoop();<br/>
+
+main(int argc, char *argv[])<br/>
+{
+
+    using namespace std;<br/>
+    if ( SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO) &lt 0 ) {<br/>
+        fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());<br/>
+
+        exit(1);<br/>
+    }<br/>
+    int VideoFlags=0;<br/>
+
+
+    char *Name="OpenGL window";<br/>
+    int width=400;<br/>
+
+    int height=300;<br/>
+
+    MakeWindow(Name, width, height, VideoFlags);<br/>
+    EventLoop();<br/>
+    atexit(SDL_Quit);<br/>
+
+}<br/>
+
+
+void MakeWindow(char * Name, int width, int height,int  VideoFlags)<br/>
+{<br/>
+  Window=SDL_SetVideoMode(width, height, SCREEN_DEPTH, VideoFlags);<br/>
+  if(Window==NULL){<br/>
+                  std::cout &lt &lt "Failed at MakeWindow\n";<br/>
+
+                  SDL_Quit();<br/>
+                  exit(0);<br/>
+                  }<br/>
+}<br/>
+void EventLoop()<br/>
+{<br/>
+ bool quitit=false;<br/>
+
+ SDL_Event event;<br/>
+ while(!quitit){<br/>
+       while(SDL_PollEvent(&event)){<br/>
+          if(event.type==SDL_QUIT)quitit=true;<br/>
+                     }<br/>
+                }<br/>
+
+}<br/><br/>
+
+We have tidied things up a little, the function prototypes are out of the main programme, and the code
+that opens the window and the loop with the event handling is also in separate function. The key
+here is in the SDL_PollEvent. If an event happens, the inner loop is activated. The event.type is
+a flag. As well as SDL_QUIT, there are SDL_KEYDOWN, SDL_MOUSEBUTTONDOWN, SDL_MOUSEMOTION, and so on.
+For instance, we could replace the if statement with a switch statement such as <br/><br/>
+ switch(event.type) <br/>
+               case SDL_QUIT:<br/>
+                 quitit=true;<br/>
+                 break;<br/>
+
+               case SDL_MOUSEBUTTONDOWN:<br/>
+                 std::cout &lt &lt  "Mouse button down\n";<br/>
+                 break;<br/>
+               case SDL_MOUSEMOTION:<br/>
+                 std::cout &lt &lt "Mouse Moving\n";<br/>
+
+                 break;<br/>
+               case SDL_KEYDOWN:<br/>
+                 whatkey=event.key.keysym;<br/>
+                 if(whatkey.sym==SDLK_a)std::cout &lt &lt "a pressed\n";<br/>
+                 break;<br/>
+
+                     } // end of case<br/><br/><br/>
+
+
+ where whatkey is declared as an SDL_kysym data type.
+</p>
+<p>
+For most purposes a mouse and a keyboard are all that we interested in. An SDL_Event has active, key, motion, and button, active has a piece of data called type. Mouse button events have an x and y position, and mouse motion
+have an xrel and an yrel as well.
+
+<br/>
+<a href="#start" > Back to list of contents</a>
+</p>
+</blockquote>
+
+
+<h1 align="center"> <a name="triangle">A Triangle in OpenGL </a> </h1>
+<blockquote>
+<p>
+
+At last we encounter our first OpenGL. At this point, two must sees are  <a href="http://www.gametutorials.com/gtstore/c-1-test-cat.aspx">
+ DigiBen's</a> set of tutorials,
+and a whole load of stuff including tutorials at <a href="http://nehe.gamedev.net/"> NeHe </a>.
+(When I first wrote this, DigiBen's openGL tutorials were free, but if you
+can easily afford about $20 a go now, well, why not!)
+Any code that follows this point will have been culled from the code available to down load, so many
+thanks to the Author, Ben "DigiBen" Humphrey and all those at NeHe. I hope to add something useful here, but be sure to download whatever tutorials might help.
+
+OK. DigiBen's tutorial starts with  plotting a triangle on the screen. It's to be
+defined in three dimensional space, and projected onto a screen via a camera. So though it doesn't
+look much, there is a fair bit behind it. Now, the main function is simple. <br/> <br/>
+
+#include &lt iostream&gt <br/>
+#include "SDL.h" <br/>
+#include &lt GL/gl.h &gt<br/>
+#include &lt GL/glu.h &gt <br/>
+
+SDL_Surface *Window=NULL; <br/>
+const unsigned short int SCREEN_DEPTH=16; <br/>
+int VideoFlags=0; <br/>
+
+// Prototypes for functions <br/>
+void MakeWindow(char *Name, int width, int height, int VideoFlags); <br/>
+void EventLoop(); <br/>
+void SetUp(); <br/>
+void RenderScene(); <br/>
+
+void InitialiseOpenGL(int, int); <br/>
+    int width=800; <br/>
+    int height=600; <br/>
+int main() <br/>
+{
+
+    using namespace std;<br/>
+    if ( SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO) &lt 0 ) {<br/>
+
+        fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());<br/>
+        exit(1);<br/>
+    }<br/>
+
+
+    char *Name="OpenGL window";<br/>
+    SetUp();<br/>
+
+    MakeWindow(Name, width, height, VideoFlags);<br/>
+    InitialiseOpenGL(width, height);<br/>
+    EventLoop();<br/>
+    return 0;<br/>
+
+}<br/><br/>
+We have to include the gl.h and glu.g and on linking we now need -lGL and -lGLU. MakeWindow is much the
+same as before, but now we call SetUp, just before we call MakeWindow. Next we call IntialiseOpenGL
+and start the EventLoop. These functions look a little bewildering.<br/><br/>
+
+void SetUp(){<br/>
+
+VideoFlags=SDL_OPENGL;<br/>
+VideoFlags |= SDL_HWPALETTE;<br/>
+VideoFlags |=SDL_RESIZABLE;<br/>
+
+const SDL_VideoInfo *VidInfo=SDL_GetVideoInfo();<br/>
+if(VidInfo==NULL){<br/>
+      std::cout &lt &lt " failed to get video information\n";<br/>
+
+      SDL_Quit();<br/>
+      exit(0);<br/>
+      }<br/>
+if(VidInfo- &gt hw_available)<br/>
+        VideoFlags |=SDL_HWSURFACE;<br/>
+      else<br/>
+
+         VideoFlags |=SDL_SWSURFACE;<br/>
+
+if(VidInfo->blit_hw)VideoFlags |=SDL_HWACCEL;<br/> <br/>
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);<br/>
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, SCREEN_DEPTH);<br/>
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 0);<br/>
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE, 0);<br/>
+
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE, 0);<br/>
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE, 0);<br/>
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE, 0);<br/>
+      }<br/>
+}<br/>
+void InitialiseOpenGL(int width, int height){<br/>
+
+  if(height==0){<br/>
+      std::cout &lt &lt "Height is zero, abandon ship!\n";<br/>
+      SDL_Quit();<br/>
+      exit(0);<br/>
+      }<br/>
+
+      glViewport(0,0,width, height);<br/>
+      glMatrixMode(GL_PROJECTION);<br/>
+      glLoadIdentity();<br/>
+      gluPerspective(45.0f,(GLfloat)width/GLfloat(height), 1, 150.0f);<br/>
+      glMatrixMode(GL_MODELVIEW);<br/>
+      glLoadIdentity();<br/>
+
+}<br/><br/>
+
+If you haven't got hardware acceleration, SetUp sets up the VideoFlag for creating the window.
+Now, all we have to do is write a RenderScene function, and call it from the the outer loop in EventLoop.<br/><br/>
+
+void RenderScene()<br/>
+{<br/>
+
+       glClear(GL_COLOR_BUFFER_BIT  | GL_DEPTH_BUFFER_BIT);<br/>
+       glLoadIdentity();
+       //camera  pos      view     up vector<br/>
+
+       gluLookAt(0,0,6,   0,0,0,   0,0,1);<br/>
+
+       glBegin(GL_TRIANGLES);<br/>
+           glVertex3f(0,1,0);<br/>
+           glVertex3f(-1,0,0);<br/>
+           glVertex3f(1,0,0);<br/>
+       glEnd();<br/>
+
+       SDL_GL_SwapBuffers();<br/>
+
+}<br/><br/>
+Most of what is new can be ignored for now, but there are a few important points. The first
+is glu_Perspective. The first argument is an angle, the field of view in the y direction, here it is
+45 degrees. The next is the aspect ratio, to determine the camera's field of view the x direction.
+Then there is Znear and Zfar. The distances from the camera to the near and far clipping plane.</p>
+
+<p>
+Note that in OpenGL the coordinate systems are <em> not </em> left handed
+as stated in some web tutorials.
+ If your right arm is pointing right,
+that's the x axis, if your left arm is pointing straight in front of you, that's pointing down the <em> negative </em> z axis, and  if you're
+standing up, from your heels to the top of your head is the y axis.
+
+</p>
+
+<p>
+The next thing is gluLookat. Here we are in "world coordinates". The first three arguments are the position of the viewer, the next vector
+is a reference point, the viewer looks toward that direction, lastly, there is the up vector. Here, the viewer
+is at z=6 looking to the origin, and the up direction is the y axis. Lastly, the triangle is fairly obvious.
+The glVertex3f entries can be floating point, openGL seems to like things like 45.0f for that.
+Now for instance, we could use the events in the event loop to determine the coordinates of the triangle
+and the camera position. We have a truly 3D graphic programme with double buffering for smooth animation,
+z (or depth) buffer, and
+clipping planes and all! Try using the keyboard events to alter the position and orientation of the triangle and the position and view point of the camera. See the <a href " figures/CameraGeom.xfig.eps ">  figure </a> for clarification.
+(Note that Znear should never be zero or negative, 0.5 is what Ben uses.)
+</p>
+
+<br/>
+<a href="#start" > Back to list of contents</a>
+
+
+</blockquote>
+
+
+
+<h1 align="center"> <a name="matrix">The Matrix </a> </h1>
+<blockquote>
+<p>
+Now, its time to look at some of the stuff that was ignored. You will have seen odd looking stuff
+to do with glMatrixMode and glLoadIdentity. There are various types of matrix operations, for instance,
+an object may be scaled, translated, and rotated. Other matrix operations might be involved in projection
+and so forth. In openGL there are four matrix stacks. A stack of anything is pretty well like a stack
+of plates. You can put them on (push), or take them off the top (pop). When we push a matrix onto the stack,
+that is the current matrix on the stack. To get back to the previous current matrix we pop the matrix from the
+stack. We are using the PROJECTION stack, and the MODELVIEW stack. The LoadIdentity functions initialises
+both these stacks with the identity matrix. (The matrix that leaves whatever it operates on unchanged.)
+If this is clear as mud, perhaps this makes things a bit clearer. Suppose we have <br/> <br/>
+
+
+Draw Triangle code <br/> <br/>
+
+glPushMatrix(); <br/> <br/>
+glTranslatef(1.0, 0.0, -1.0); <br/> <br/>
+
+Draw Triangle code identical to the first <br/> <br/>
+
+glPopMatrix(); <br/> <br/>
+
+Now, the draw  triangle code has the GlBegin and GLEnd stuff, matrix operations cannot go in between these
+statements. What happens is that first, the Identity matrix is in the Matrix stack that affects
+where the vertices of the triangle are. That means they go exactly where we say they are. Then
+we tell openGL that there is a matrix to be pushed on the stack, that matrix translates the coordinates
+by 1 in the x direction, 0 in the y direction and -1 in the z direction. This applies to all
+points in the drawing to between the  subsequent GLBegin and GLEnd. Then the matrix is popped, so we are back to the identity matrix. If we don't pop the matrix, but push the same translation onto the stack,
+the third triangle will be drawn with x shifted by two, and z shifted by minus two.
+
+
+
+
+
+
+</p>
+
+<br/>
+<a href="#start" > Back to list of contents</a>
+
+
+</blockquote>
+
+
+
+
+<h1 align="center"> <a name="camera">A camera Class </a> </h1>
+
+<blockquote>
+<p>
+At this point, I took the hint from Ben that I should have an Init.h containing most of the initialisation
+code and includes main(), and I added a key handler similar to Ben's. So here are the bones of
+Camera.cpp. I will only try and keep the detail to a minimum. It starts a "#include" with a constructor
+which sets three member C3Vecs (C3Vec is a vector class). These are CamPos for the camera position,
+ CamView for the "stare at" point, and CamUp, the "up" vector, which points along the camera's y axis.
+ The defaults are (0,0,20), (0,0,15) and (0,1,0). Then there is the destructor. <p>
+
+ <p>
+ Now comes the first function, CamMove, which moves the camera and the stare at point together along the
+ view direction. This is simple.  We take a unit vector along the view direction, so that the speed
+ is doesn't depend on the distance between the stare at point. We could fix it later
+ so that the stare at point is always a unit vector, so that the norm isn't needed, but for now.
+
+ <br/><br/>
+
+
+void CCam::CamMove(float speed){<br/>
+float xp=*CamPos.x;<br/>
+float yp=*CamPos.y;<br/>
+
+float zp=*CamPos.z;<br/>
+
+
+
+float xv=*CamView.x;<br/>
+float yv=*CamView.y;<br/>
+float zv=*CamView.z;<br/>
+
+float norm=sqrt( (xv-xp)*(xv-xp)+(yv-yp)*(yv-yp)+(zv-zp)*(zv-zp) );<br/>
+
+if( norm >1.e-6){<br/>
+
+float speednorm =speed/norm;<br/>
+float addx,addy,addz;<br/>
+<br/>
+addx=(xv-xp)*speednorm;<br/>
+addy=(yv-yp)*speednorm;<br/>
+addz=(zv-zp)*speednorm;<br/>
+
+*CamPos.x=xp+addx;<br/>
+*CamPos.y=yp+addy;<br/>
+
+*CamPos.z=zp+addz;<br/>
+
+*CamView.x=xv+addx;<br/>
+*CamView.y=yv+addy;<br/>
+*CamView.z=zv+addz;<br/>
+
+
+}<br/>
+else<br/>
+{<br/>
+
+std::cout  &lt &lt "view direction undefined in CamMove, Camera.cpp\n";<br/>
+exit(0);<br/>
+}<br/>
+
+}<br/><br/>
+Later, we fix this up so that it's called with a positive value when the up arrow key is
+pressed, and negative value for the down arrow key. The effect is obvious, it marches the camera in the view
+direction.
+</p>
+
+<p>
+ The left and right arrow keys will activate either CamRotateView, CamRotate, or CamStrafe,
+depending on if the Ctrl or shift key is down. CamRotateView rotates the camera's view direction.
+This direction is the stare at point vector minus the camera position vector. A <a href="Tex/Matrices.pdf">
+
+rotation matrix </a> does the job.
+I have made a slight departure from Ben's version, I keep the total sum
+of the angle that has been turned through every time. This can be used for watching a "character"
+as it moves around the 3D space. Without it the character will appear to rotate as it moves, so if he is running into
+a room say, and we change the view direction to the door so he can run out, our view of him will have changed
+by 180 degrees, so he now faces the camera, and  runs out backwards: with the accumulation angle, we can change and face the door before running out again.
+<br/><br/>
+
+
+void CCam::CamRotateView(float speed){<br/>
+
+//rotate about y axis<br/>
+//<br/>
+float xp=*CamPos.x;<br/>
+float zp=*CamPos.z;<br/>
+
+float xv=*CamView.x;<br/>
+float zv=*CamView.z;<br/>
+
+float vx=(xv-xp);<br/>
+float vz=(zv-zp);<br/>
+
+angycum-=speed;<br/>
+if(angycum &gt twopi)angycum-=twopi;<br/>
+
+if(angxcum &lt -twopi)angxcum+=twopi;<br/>
+float CosA=cos(speed);<br/>
+float SinA=sin(speed);<br/>
+
+float vx2=(CosA*vx-SinA*vz);<br/>
+float vz2=(SinA*vx+CosA*vz);<br/>
+
+*CamView.x=*CamPos.x+vx2;<br/>
+*CamView.z=*CamPos.z+vz2;<br/>
+
+}<br/><br/>
+</p>
+<p>
+The converse of this function is CamRotatePos, with this, the camera position rotates
+around the object. We might want the character face the same way, in other cases it might
+not be a character, but say, a spear held by a first person, fixed on the target
+at the stare at point. Without angycum, this spear would rotate, so in some instances we might want it here too.<br/>{<br/>
+
+{
+<br/>
+void CCam::CamRotatePos(float speed){<br/>
+
+//rotate camera position about stare at point<br/>
+//
+float xp=*CamPos.x;<br/>
+
+float zp=*CamPos.z;<br/>
+
+float xv=*CamView.x;<br/>
+float zv=*CamView.z;<br/>
+
+float vx=(xp-xv);<br/>
+float vz=(zp-zv);<br/>
+
+//initialise as zero<br/>
+//compensate total cumulative rotations!<br/>
+
+
+float CosA=cos(speed);<br/>
+float SinA=sin(speed);<br/>
+
+float vx2=(CosA*vx-SinA*vz);<br/>
+float vz2=(SinA*vx+CosA*vz);<br/>
+
+*CamPos.x=*CamView.x+vx2;<br/>
+*CamPos.z=*CamView.z+vz2;<br/>
+}<br/><br/>
+
+</p>
+</p>
+Here we use a <a href="Tex/Vectors.pdf">cross product </a> to get the x axis vector
+from the camera's point of view. So this moves the camera sideways, but it stares in the same
+direction by changing the stare at point by the same amount.<br/><br/>
+
+void CCam::CamStrafe(float speed){<br/>
+
+//rotate about y axis<br/>
+//
+C3Vec  v;<br/><br/>
+v=CamView;<br/>
+
+v.DiffVec(CamPos);<br/>
+
+
+C3Vec Perp;<br/>
+Perp.CrossVec(v,CamUp);   
+Perp.Normed();<br/>
+
+*CamPos.x=*CamPos.x+*Perp.x*speed;<br/>
+*CamPos.y=*CamPos.y+*Perp.y*speed;<br/>
+*CamPos.z=*CamPos.z+*Perp.z*speed;<br/>
+
+
+*CamView.x=*CamView.x+*Perp.x*speed;<br/>
+*CamView.y=*CamView.y+*Perp.y*speed;<br/>
+*CamView.z=*CamView.z+*Perp.z*speed;<br/>
+
+}<br/><br/>
+<p>
+Now, here is quite a neat trick. We set the mouse to point at the centre of the screen. If the mouse
+is not there after a mouse event, we move it back to centre again, and set two angles from the direction.
+<em> Note you must be able to quit by pressing the escape key or whatever, because you cannot
+use the mouse to quit now.</em> We then use cross products to get unit vectors in the
+camera's z, y, and z directions. ( See <a href="Tex/Vectors.pdf">cross products </a> if this is completely new to you, or try a search engine to find a site with a more in depth explanation.)
+I have done a <a href="Tex/Matices.pdf">three dimensional rotation </a>here, but the successive 2D rotations would be
+more efficient. I just got enthusiastic about my matrices. In fact, we might
+want to have a three dimensional version of the accumulation angle at some point in
+time, so I shall leave it that way as a reminder to me.<br/><br/>
+
+void  CCam::MouseView(){<br/>
+// use mouse to alter the view direction of the camera<br/>
+int mousex,mousey;<br/>
+int middlex,middley;<br/>
+middlex=SCREEN_WIDTH >> 1;   //does a bitwise shift to get half SCREEN_WIDTH !<br/>
+middley=SCREEN_HEIGHT >> 1;<br/>
+float angy, angx;<br/>
+angy=0.0;<br/>
+
+angx=0.0;<br/>
+SDL_GetMouseState(&mousex,&mousey);<br/>
+if(middlex==mousex && middley==mousey)return;<br/>
+SDL_WarpMouse(middlex,middley);<br/>
+
+
+angy =(float)(mousex-middlex)/1000.0;   //rotate about cameras y axis if x changes<br/>
+angx =(float)(mousey-middley)/1000.0;   //rotate about camera x axis<br/>
+
+C3Vec  v;<br/>
+v=CamView;<br/>
+v.DiffVec(CamPos);<br/>
+
+// v is a vector from the camera to the stare at point<br/>
+
+
+C3Vec Perp;<br/>
+Perp.CrossVec(v,CamUp);   
+                          // It's the camera's x axis<br/>
+                          // We need the norm value later, so don't use Normed function<br/>
+
+<br/>
+float normfac=sqrt( (*Perp.x)*(*Perp.x)+(*Perp.y)*(*Perp.y)+(*Perp.z)*(*Perp.z) );<br/>
+<br/>
+if( fabs(normfac) &lt 1e-8){<br/>
+        std::cout &lt *lt  " normfac =zero in MouseView \n";<br/>
+        exit(0);<br/>
+       }
+*Perp.x=*Perp.x/normfac;<br/>
+
+*Perp.y=*Perp.y/normfac;<br/>
+*Perp.z=*Perp.z/normfac;<br/>
+//now Perp and CamUp (x and y at the camera) are normalised<br/>
+
+float dotty=CamUp*v;<br/>
+
+
+C3Vec vbar;   //Note v not normalised so need normfac<br/>
+              //use vector triple product instead of cross product<br/>
+vbar=v;        //  (U dot U) V -(V dot U) U but U is normed<br/>
+
+*vbar.x -= dotty*(*CamUp.x);<br/>
+*vbar.y -= dotty*(*CamUp.y);<br/>
+*vbar.z -= dotty*(*CamUp.z);<br/>
+
+*vbar.x=*vbar.x/normfac;<br/>
+*vbar.y=*vbar.y/normfac;<br/>
+*vbar.z=*vbar.z/normfac;<br/>
+
+
+//vbar is now unit z vector at camera<br/>
+
+float vx=Perp*v;<br/>
+float vy=CamUp*v;<br/>
+float vz=vbar*v;<br/>
+
+float SinTheta1=sin(angy);<br/>
+float CosTheta1=cos(angy);<br/>
+float SinTheta2=sin(angx);<br/>
+float CosTheta2=cos(angx);<br/>
+
+float vnewx=CosTheta1*vx-SinTheta1*vz;<br/>
+
+float vnewy=-SinTheta2*SinTheta1*vx+CosTheta2*vy-SinTheta2*CosTheta1*vz;<br/>
+float vnewz=-CosTheta2*SinTheta1*vx+SinTheta2*vy+CosTheta2*CosTheta1*vz;<br/>
+
+
+*CamView.x=*CamPos.x+vnewx*(*Perp.x)+vnewy*(*CamUp.x)+vnewz*(*vbar.x);<br/>
+*CamView.y=*CamPos.y+vnewx*(*Perp.y)+vnewy*(*CamUp.y)+vnewz*(*vbar.y);<br/>
+*CamView.z=*CamPos.z+vnewx*(*Perp.z)+vnewy*(*CamUp.z)+vnewz*(*vbar.z);<br/>
+
+}<br/><br/>
+Now, here we do a similar thing to what happens above, except this time, if the mouse button
+is down, moving the mouse rotates the camera position around the stare at point, rather than
+moving he camera's view direction.
+<br/><br/>
+
+void  CCam::MouseLookAt(){<br/>
+
+//use mouse to change the camera position while looking at stare at point<br/>
+
+int mousex,mousey;<br/>
+int middlex,middley;<br/>
+middlex=SCREEN_WIDTH >> 1;<br/>
+middley=SCREEN_HEIGHT >> 1;<br/>
+float angy, angx;<br/>
+
+angy=0.0;<br/>
+angx=0.0;<br/>
+SDL_GetMouseState(&mousex,&mousey);<br/>
+if(middlex==mousex && middley==mousey)return;<br/>
+SDL_WarpMouse(middlex,middley);<br/>
+
+
+angy =(float)(mousex-middlex)/1000.0;   //rotate about cameras y axis if x changes<br/>
+
+angx =(float)(mousey-middley)/1000.0;   //rotate about camera x axis<br/>
+
+C3Vec  v;<br/>
+v=CamPos;<br/>
+v.DiffVec(CamView);<br/>
+
+C3Vec Perp;<br/>
+Perp.CrossVec(v,CamUp);   
+                          // It's the camera's x axis<br/>
+                          // We need the norm value later, so don't use Normed function<br/>
+
+float normfac=sqrt( (*Perp.x)*(*Perp.x)+(*Perp.y)*(*Perp.y)+(*Perp.z)*(*Perp.z) );<br/>
+
+if( fabs(normfac) &lt 1e-8){<br/>
+        std::cout &lt &lt  " normfac =zero in MouseView \n";<br/>
+        exit(0);<br/>
+
+       }<br/>
+*Perp.x=*Perp.x/normfac;<br/>
+*Perp.y=*Perp.y/normfac;<br/>
+*Perp.z=*Perp.z/normfac;<br/>
+//now Perp and CamUp (x and y at the camera) are normalised<br/>
+<br/>
+float dotty=CamUp*v;<br/>
+
+<br/>
+C3Vec vbar;   //Note v not normalised so need normfac<br/>
+
+              //use vector triple product instead of cross product<br/>
+vbar=v;        //  (U dot U) V -(V dot U) U but U is normed<br/>
+<br/>
+*vbar.x -= dotty*(*CamUp.x);<br/>
+*vbar.y -= dotty*(*CamUp.y);<br/>
+*vbar.z -= dotty*(*CamUp.z);<br/>
+
+*vbar.x=*vbar.x/normfac;<br/>
+*vbar.y=*vbar.y/normfac;<br/>
+
+*vbar.z=*vbar.z/normfac;<br/>
+
+float vx=Perp*v;<br/>
+float vy=CamUp*v;<br/>
+float vz=vbar*v;<br/>
+
+float SinTheta1=sin(angy);<br/>
+float CosTheta1=cos(angy);<br/>
+float SinTheta2=sin(angx);<br/>
+float CosTheta2=cos(angx);<br/>
+
+float vnewx=CosTheta1*vx-SinTheta1*vz;<br/>
+float vnewy=-SinTheta2*SinTheta1*vx+CosTheta2*vy-SinTheta2*CosTheta1*vz;<br/>
+float vnewz=-CosTheta2*SinTheta1*vx+SinTheta2*vy+CosTheta2*CosTheta1*vz;<br/>
+
+
+*CamPos.x=*CamView.x+vnewx*(*Perp.x)+vnewy*(*CamUp.x)+vnewz*(*vbar.x);<br/>
+*CamPos.y=*CamView.y+vnewx*(*Perp.y)+vnewy*(*CamUp.y)+vnewz*(*vbar.y);<br/>
+*CamPos.z=*CamView.z+vnewx*(*Perp.z)+vnewy*(*CamUp.z)+vnewz*(*vbar.z);<br/>
+
+}<br/><br/>
+
+
+So, inside the event loop we have just check for an event as before.<br/><br/>
+
+       while(SDL_PollEvent(&event)){<br/>
+
+
+          switch(event.type){<br/><br/>
+               case SDL_QUIT:<br/>
+
+                 quitit=true;<br/>
+                 break;<br/>
+                 case SDL_MOUSEBUTTONDOWN:<br/>
+                    mousedown=true;<br/>
+                 break;<br/>
+                 case SDL_MOUSEBUTTONUP:<br/>
+
+                    mousedown=false;<br/>
+                 break;<br/>
+                 case SDL_MOUSEMOTION:<br/>
+                  if(mousedown){<br/>
+                         Camera1.MouseView();}<br/>
+                  else{<br/>
+
+                         Camera1.MouseLookAt(); }<br/>
+                 break;<br/>
+
+
+               case SDL_KEYDOWN:<br/>
+                   whatkey=&event.key.keysym;<br/>
+                   HandleKeyPress(whatkey);<br/>
+
+                   break;<br/>
+               case SDL_KEYUP:<br/>
+                   whatkey=&event.key.keysym;<br/>
+                   HandleKeyRelease(whatkey);<br/>
+               default:<br/>
+                 break;<br/>
+
+                     } // end of case<br/>
+                } //end of inner loop<br/>
+
+	 //regardless of whether the mouse moved or was clicked<br/>
+              CheckMove(Camera1);<br/>
+              RenderScene(Camera1);<br/>
+            } //end of outer loop<br/><br/>
+
+So, if the mouse moves it calls MouseLookAt, unless the mouse button is down. CheckMove
+calls the non mouse Camera functions depending on what happens in the key
+handling functions below.<br/><br/>
+
+
+
+void HandleKeyPress(SDL_keysym *whatkey)<br/>
+{
+             float myspeed=speed;<br/>
+             switch(whatkey->sym)<br/>
+             {
+                 case SDLK_ESCAPE:<br/>
+                   SDL_Quit();<br/>
+
+                   exit(0);<br/>
+                   break;<br/>
+                 case  SDLK_UP:<br/>
+                   upPressed=true;<br/>
+                   break;<br/>
+		 case  SDLK_DOWN:<br/>
+
+                   downPressed=true;<br/>
+                   break;<br/>
+                 case SDLK_LEFT:<br/>
+                   leftPressed=true;<br/>
+                   if( whatkey->mod & KMOD_CTRL)<br/>
+                   {<br/>
+
+                   leftPressed =false;<br/>
+                   ctrl_leftPressed=true;<br/>
+                   }<br/>
+                   if( whatkey->mod & KMOD_SHIFT){<br/>
+                   leftPressed =false;<br/>
+                   shift_leftPressed=true;<br/>
+
+                   }<br/>
+                   break;<br/>
+                 case SDLK_RIGHT:<br/>
+                   rightPressed=true;<br/>
+                   if( whatkey->mod & KMOD_CTRL)<br/>
+                   {<br/>
+
+                   rightPressed =false;<br/>
+                   ctrl_rightPressed=true;<br/>
+                   }<br/>
+                   if( whatkey->mod & KMOD_SHIFT){<br/>
+                   rightPressed =false;<br/>
+                   shift_rightPressed=true;<br/>
+
+                   }<br/>
+                 default:<br/>
+                   break;<br/>
+             }<br/>
+}<br/>
+void HandleKeyRelease(SDL_keysym *whatkey)<br/>
+{
+             switch(whatkey->sym)<br/>
+
+             {<br/>
+                 case  SDLK_UP:<br/>
+                   upPressed=false;<br/>
+                   break;<br/>
+		 case  SDLK_DOWN:<br/>
+                   downPressed=false;<br/>
+
+                   break;<br/>
+                 case SDLK_LEFT:<br/>
+                   leftPressed=false;<br/>
+                   shift_leftPressed=false;<br/>
+                   ctrl_leftPressed=false;<br/>
+                   break;<br/>
+
+                 case SDLK_RIGHT:<br/>
+                   rightPressed=false;<br/>
+                   shift_rightPressed=false;<br/>
+                   ctrl_rightPressed=false;<br/>
+                   break;<br/>
+                 default:<br/>
+
+                   break;<br/>
+
+             }<br/>
+}<br/>
+void CheckMove(CCam & Camera1){<br/>
+    if(downPressed)Camera1.CamMove(-speed);<br/>
+    if(upPressed)Camera1.CamMove(speed);<br/>
+
+    if(leftPressed)Camera1.CamRotatePos(-speed);<br/>
+    if(rightPressed)Camera1.CamRotatePos(speed);<br/>
+
+    //assumes no one does ctrl and shift together!<br/>
+    if(shift_leftPressed)Camera1.CamRotateView(-speed);<br/>
+    if(shift_rightPressed)Camera1.CamRotateView(speed);<br/>
+    if(ctrl_leftPressed)Camera1.CamStrafe(-speed);<br/>
+
+    if(ctrl_rightPressed)Camera1.CamStrafe(speed);<br/>
+}<br/>
+<br/><br/>
+So, all this is pretty much the same as Ben's. The slight differences are that this camera
+flies rather than sticks to the ground, we have the accumulation of rotations stored
+so that  our "character" (a blue square) turns with the view direction (but only for
+keyboard turns, I have merely flagged up the possibility of doing the same for three
+dimensional rotations, and we can rotate the view, the camera, or strafe depending on
+whether the control or the shift key is pressed. Anyhow, if you want to try it out
+you can download a gzipped tar file with the code by shift clicking on <a href="Tarfiles/Triang.tar.gz">
+download camera </a> but you should certainly download the code at <a href="http://www.gametutorials.com/Tutorials/opengl/OpenGL_Pg1.htm"> Ben's set of tutorials</a> too.
+
+
+<br/>
+<a href="#start" > Back to list of contents</a>
+
+</p>
+</blockquote>
+
+<h1 align="center"> <a name="time">A Little Timing </a> </h1>
+<blockquote>
+<p>
+Suppose you want to make a programme that looks and feels the same on a  slow or
+fast machine. For instance, in the camera programme above, the camera will
+be slower or faster depending on the speed. Also, suppose the camera is in one place, where
+it sees a lot of detail and the rendering is slow, the camera might slow down compared to
+where there are just a few polygons.
+
+What is needed here is SDL_GetTicks(), which returns a 4 byte integer. This is the number
+of milliseconds since SDL was initialised. Every time you render the scene, you know
+the time interval since the scene was last rendered. You then just scale the camera speed
+accordingly. So, if its a long time, the camera speeds up, and a short time the camera
+slows down. Also, we can scale the speed with the frame rate so that a character
+will get from A to B in the same time, independent of the frame rate associated with
+the particular hardware its running on. SDL_GetTicks() is all you need.
+
+
+<br/>
+<a href="#start" > Back to list of contents</a>
+
+
+</p>
+</blockquote>
+
+<h1 align="center"> <a name="textures">Textures </a> </h1>
+<blockquote>
+<p>
+
+We have already seen how to load a bitmap, now we shall use bitmaps to apply textures to the triangles,
+rectangles and polygons we might have on our 3D world. To start with, we need to load the bitmaps, then a call must be made to glGenTextures. The first argument is an integer specifying the number of textures,
+and the second argument is a pointer to an unsigned int (which of course can point to the first
+element in an array).  What this does is let OpenGL generate a list of <em>names</em> for the
+textures. So in glGenTextures(1, &textureArray[textureID]); textureArray is an array of unsigned ints
+which will contain references to the textures. Then we need to call glBindTexture. This takes two arguments.
+The first must be GL_TEXTURE1D. GLTEXTURE2D, or GLTEXTURE3D, the second must be a reference to a texture (generated by glGenTexture). Now, when you zoom about in your 3D world, you see the texture from different
+distances. The different resolutions needed are sorted out by Mipmaps. This is where you tell OpenGL
+what the texture is. From DigiBen's Texture mapping init.cpp <br/> <br/>
+
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, pBitmap[0]->w, pBitmap[0]->h, GL_RGB, GL_UNSIGNED_BYTE, newData); <br/>
+
+    // Lastly, we need to tell OpenGL the quality of our texture map.  GL_LINEAR_MIPMAP_LINEAR <br/>
+    // is the smoothest.  GL_LINEAR_MIPMAP_NEAREST is faster than GL_LINEAR_MIPMAP_LINEAR, <br/>
+    // but looks blotchy and pixellated.  Good for slower computers though.  Read more about <br/>
+    // the MIN and MAG filters at the bottom of main.cpp <br/>
+
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); <br/>
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST); <br/> <br/>
+
+In this piece of code newData is pointer to an unsigned character array pointing to a swapped around version
+of pBitmap. You also need to do a glEnable(GL_TEXTURE_2D) in the initialisation.
+
+So, using Ben's CreateTexture, you can load as many textures as you want into g_Texture. To
+set a current texture, you use glBindTexture(g_Texture[n]). Note that the background colour
+of anything you draw will be the colour last set by glColorub. Set it to white so that it doesn't
+interfere with the textures colour. Now, you will have used a rectangular bitmap as the texture.
+It has local coordinates U,V that run from zero to one. The top right is (1,1), top left is
+(0,1), bottom left is (0,0) and bottom right is (1,0). Now, when you draw a shape, you have
+to call glTextCoord2f(U,V) (U and V are floats) every time you call the glVertx3f so that that
+place in the bit map is associated with that vertex.
+If you are drawing a triangle, say, and you want an undistorted triangular bit of the bitmap,
+you have to work out what U and V is for each vertex. Get it wrong, and you get a rotated and/or
+distorted version of the bit map. (This you may want to do anyway.)
+
+</p>
+<br/>
+<a href="#start" > Back to list of contents</a>
+
+
+</blockquote>
+
+
+<h1 align="center"> <a name="blendlight" > Blending and Lighting Effects </a></h1>
+<blockquote>
+<p>
+We actually have an alpha value, as well as red,green and blue value. This is used for
+blending between two values, and it can be made to render an object semi transparent
+or, totally transparent. Now, when you draw an object in, objects will have already been drawn
+in (in general). These pixels that are already there are called destination pixels. They might
+be the destination where your object is going to be. The incoming object is known as the source.
+</p>
+<p>
+Without going into too much depth here, we need to call glEnable(GL_BLEND)
+and then use gl_BlendFunc( X, Y) where X and Y can be GL_ZERO,GL_ONE,GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALHA,
+GL_SRC_ALPHA_SATURATE (DST for destination can replace SRC for source). If d stands for destination and s stands for source, so that Rs means Red source,
+then Rd=min(kR,Rs times sR +Rd times dR). (Here kR is the maximum number that a red value can take, so its mostly 255, and the sR and dR are scale values). The alpha value can be set by using glColor4ub, which
+takes four floats red,blue,green and alpha. A call to glDisable(GL_BLEND) should be made after
+the object is drawn.
+</p>
+<p>
+For lighting, we need to specify the normal before we define the first vertex of any polygon we draw.
+So, calculate the normal and then tell OpenGL about it using glNormal3f(x,y,z). There are also 3b, 3d, 3i, and 3s versions for byte,double,integer, and short integer. The normal is needed to calculate the irradiance
+falling on the polygon.
+</p>
+<p>
+
+Next we need to specify a light colour, for instance it might be float mycolouris {.5,.6,.7,1.0};
+with the fourth component being the alpha value. Now it's a call to glLightfv(GL_LIGHT0,GL_AMBIENT,mycolouris)
+and we have a light. The first argument is the light number. As well as GL_AMBIENT there are
+ GL_DIFFUSE, GL_SPECULAR, GL_POSITION, GL_SPOT_DIRECTION, GL_SPOT_EXPONENT, GL_SPOT_CUTOFF, GL_CONSTANT_ATTENUATION, GL_LINEAR_ATTENUATION, and GL_QUADRATIC_ATTENUATION.
+ </p>
+ <p>
+
+If we call with GL_AMBIENT, GL_SPECULAR, or GL_DIFFUSE, the last argument is a colour. If we
+call it with GL_POSITION it needs the light position, i.e. float lightpos {1,20,30,1}; I don't know
+why it needs the fourth component, GL_SPOT_DIRECTION is only three eg float spotpos {20,20,20};.
+Then GL_SPOT_EXPONENT (0-128) and GL_SPOT_CUTOFF (0-90) can be specified. Exponent controls
+the distribution of the spot (specular) light, and cutoff the semi cone angle. Specular is an odd term to
+use, it might be used to create specular effects, but the light itself is not specular.
+Finally the _ATTENUATION  factors will need a float single float to specify the attenuation.
+Oh, and don't forget to do an glEnable(GL_LIGHTING) and glEnable(GL_LIGHT0) before
+setting the properties of GL_LIGHT0. You can use glEnable and glDisable to turn individual lights
+on and off.
+
+</p>
+
+<br/>
+<a href="#start" > Back to list of contents</a>
+
+
+</blockquote>
+
+<h1 align="center"> <a name="DisplayLists" > Display Lists </a></h1>
+
+<blockquote>
+<p>
+Suppose you have a whole block of instructions that are going to be repeated over and over.
+Of course, you can put the whole block in a function, but there is something better, you can put
+them into a Display List (DL). Why is a Display list better? Because it  gets precompiled, and if
+if you have hardware acceleration, stored in the graphics cards memory. (This is obviously hardware
+dependent.) Anyway, things will usually run faster if you use display lists. This list goes between <br/><br/>
+
+Naturally, each list will have a unique ID, which is guaranteed id, which is done using glGenLists
+
+int listID=glGenLists(1);
+
+void glNewList(int listID, GL_COMPILE);<br/>
+//stuff goes here<br/>
+void glEndList(void);<br/><br/>
+or<br/><br/>
+
+int listID=glGenLists(1);
+
+void glNewList(int listID, GL_COMPILE_AND_EXECUTE);<br/>
+//stuff goes here <br/>
+
+void glEndList(void);<br/><br/>
+So typically, in the initialisation, you would call a function that returned the
+value of the ID, which would be a global variable. Then, in the rendering part of
+the programme, you just use glCallList(listID); and there you go.
+ Now, there are various commands (such as glGenLists) that cannot be used inside
+ the list, and don't make the lists too big, as you begin to lose performance
+ when the lists become too large.
+
+<br/>
+<a href="#start" > Back to list of contents</a>
+</p>
+</blockquote>
+
+<h1 align="center"> <a name="BitMapFont" > Bitmap Fonts </a></h1>
+<blockquote>
+<p>
+
+Now, suppose you need to write text to the screen. You might suppose that's easy, but OpenGL
+does not support text! Now, you might want to type in your text using software like the Gimp,
+and then use it as a texture on a Quad, but that would make things impossible if you
+didn't know in advance what the text might be. The following code is taken from lesson 13
+at <a href="http://nehe.gamedev.net/"> NeHe </a>, here we have made a header file bitmapfoont.h
+and a bitmapfont.cpp file, so we can keep all this text stuff separate.
+I don't quite understand all of it, or why I get no spaces between words, whereas
+the original does. I have made no changes, apart from renaming base as basefont, just in case
+I wanted to use base for something else (its a global variable). Here is the header.<br/><br/>
+
+#include &lt stdarg.h &gt <br/>
+#include &lt string.h &gt <br/>
+#include &lt stdlib.h &gt <br/>
+
+#include &lt GL/glx.h &gt <br/>
+#include "SDL.h"<br/>
+extern int basefont;  //Base display list for font<br/>
+
+
+void KillFont();<br/>
+void Quit();<br/>
+void BuildFont();<br/>
+
+void glPrint(const char*,...);<br/><br/>
+
+And now the code
+
+#include "bitmapfont.h"<br/>
+
+
+    /* Storage for 96 characters originally in BuildFont*/<br/>
+    int basefont = glGenLists( 96 );<br/>
+
+/* function to recover memory form our list of characters */<br/>
+GLvoid KillFont( GLvoid )<br/>
+
+{<br/>
+    glDeleteLists( basefont, 96 );<br/>
+<br/>
+    return;<br/>
+}<br/>
+
+/* function to release/destroy our resources and restoring the old desktop */<br/>
+void Quit( int returnCode )<br/>
+{
+
+    KillFont( );<br/>
+
+    /* clean up the window */<br/>
+    SDL_Quit( );<br/>
+
+    /* and exit appropriately */<br/>
+    exit( returnCode );<br/>
+}
+
+/* function to build our font list */<br/>
+GLvoid BuildFont( GLvoid )<br/>
+
+{
+    Display *dpy;          /* Our current X display */<br/>
+    XFontStruct *fontInfo; /* Our font info */<br/>
+
+
+    /* Get our current display long enough to get the fonts */<br/>
+    dpy = XOpenDisplay( NULL );<br/>
+
+    /* Get the font information */<br/>
+
+    fontInfo = XLoadQueryFont( dpy, "-adobe-helvetica-medium-r-normal--18-*-*-*-p-*-iso8859-1" );<br/>
+
+    /* If the above font didn't exist try one that should */<br/>
+    if ( fontInfo == NULL )<br/>
+	{
+	    fontInfo = XLoadQueryFont( dpy, "fixed" );<br/>
+	    /* If that font doesn't exist, something is wrong */<br/>
+	    if ( fontInfo == NULL )<br/>
+
+		{<br/>
+		    fprintf( stderr, "no X font available?\n" );<br/>
+		    Quit( 1 );<br/>
+		}<br/>
+	}<br/>
+
+    /* generate the list */<br/>
+
+    glXUseXFont( fontInfo->fid, 32, 96, basefont );<br/>
+
+    /* Recover some memory */<br/>
+    XFreeFont( dpy, fontInfo );<br/>
+
+    /* close the display now that we're done with it */<br/>
+    XCloseDisplay( dpy );<br/>
+
+    return;<br/>
+}<br/>
+<br/>
+/* Print our GL text to the screen */<br/>
+GLvoid glPrint( const char *fmt,...)<br/>
+{
+    char text[256]; /* Holds our string */<br/>
+    va_list ap;     /* Pointer to our list of elements */<br/>
+
+    /* If there's no text, do nothing */<br/>
+    if ( fmt == NULL )<br/>
+	return;<br/>
+
+    /* Parses The String For Variables */<br/>
+    va_start( ap, fmt );<br/>
+      /* Converts Symbols To Actual Numbers */<br/>
+
+      vsprintf( text, fmt, ap );<br/>
+    va_end( ap );<br/>
+
+    /* Pushes the Display List Bits */<br/>
+    glPushAttrib( GL_LIST_BIT );<br/>
+
+    /* Sets basefont character to 32 */<br/>
+
+    glListBase( basefont - 32 );<br/>
+
+    /* Draws the text */<br/>
+    glCallLists( strlen( text ), GL_UNSIGNED_BYTE, text );<br/>
+
+    /* Pops the Display List Bits */<br/>
+    glPopAttrib( );<br/>
+
+}<br/>
+<br/>
+
+Now the BuildFont function goes in with the initialisation, and  glPrint is called via<br/>
+   glRasterPos2f( 10.,10. );<br/>
+    glPrint("Whata A load of old TEXT");<br/>
+    glPrint("Whata A load of old TEXT-%7.2f",floatnumber);<br/><br/>
+As I said, I don't understand some of the C in the glPrint function, so I don't know
+why there are no spaces  between the words, but I shall see if I can fix it later.</p>.
+
+
+<br/>
+<a href="#start" > Back to list of contents</a>
+
+</blockquote>
+</p>
+<h1 align="center"> <a name="TrueTypeFont1"> Using TrueType-1 Fonts </a></h1>
+<blockquote>
+<p>
+You should probably skip the parts of  this section concerning getting truetype-1 and GLTT to compile.
+ I used to use truetype-1, but since I changed to gcc-4.4
+ on a 64 bit machine I cannot get either truetype-1 or GLTT to compile at all. Truetype-1/GLTT
+has been replaced with TrueType-2/OGLFT.
+</p>
+<p>
+Now, bitmaps are bitmaps, and we can't use things like glRotatef on them. If we want to
+write on the ground, or have text you can walk around for instance, this will not do.
+The way to have text that you can rotate, and behave in general just like a polygon.
+In order to do this, you can use the <a href="http://gltt.sourceforge.net/"> gltt  library </a>.
+ This in turn needs <a href="http://www.freetype.org"> TrueType font </a> as supplied by
+ the freetype project.
+ </p>
+
+ <p>
+  Once you have downloaded the tar files, you might imagine that installation would be
+ easy, but no, it isn't as easy as it should be. If you <em> absolutely have to use GLTT </em>
+ Download freetype-1.3.1 <em> not freetype-2 </em>
+ first. Otherwise check if you already have freetype-2, or download freetype-2 from the same website.
+ As it
+ says, you do the usual ./configure, make, and make install. But before you do this, you
+ need to edit a file in the test directory. In this directory there is a file called ftdump.c. There are two lines
+ with memory_footprint.##field. These will cause compilation errors and you won't be able to
+  install, change them to memory_footprint.field. This should take care of it.
+  </p>
+  <p>
+
+  Now for the gltt library, on my system, if you download the rpm and use the setup tool
+, it says that it's installed, but it doesn't install properly at all. So, download the tar
+  file for gltt-2.5.2, not the rpm. Next, there is an error in the FTGlyphVectorizer.h file.
+  Change friend FTGlyphVectorizer to friend class FTGlyphVectorizer on line 79.
+  Now, the .configure doesn't manage to configure. My freetype directory headers are in
+  /usr/local/include/freetype, so I need to do  <br/> <br/>
+  ./configure --prefix=/usr/local --with-ttf-dir=/usr/local/include/freetype  <br/> <br/>
+  You can always try ./configure --help to see any other options you need, that worked for me.
+  Now do make and make install. Now libgltt and libttf should be in /usr/local/bin. For
+  some reason it tells you that the /usr/local is a default, but it seems to think that
+  this is the default, hence the prefix bit. 
+  One last thing, if you have attempted to install gltt with the rpm, you MUST uninstall
+ it, otherwise, when you run a programme using the truetype library, it will crash
+ when you declare a FTFace variable, giving you something like "fatal-relocation error
+ undefined symbol...."
+</p>
+<p>
+  Now you can get started? Well not really. First, if your on Microsoft or Apple, you will definitely
+  have the truetype
+  fonts. On linux, you will find that you have some of them, but might need to download others.
+  Do a find files with a ttf extension to
+  find where they are. (Most likely /usr/share/fonts on a Linux machine.)
+</p>
+<p>
+  Next the documentation is minimal and contains a couple of irritating errors.
+  The &amp;face should of course be face, and it looks as
+  though the print function has been replaced by  the output function in all cases. So the code as presented
+  in the documentation would just give compile errors. The documentation doesn't tell you
+  which include files  you need, but just look in /usr/local/include/gltt and you will find them.
+  Compile errors will tell you about any others you might need.
+  (Also add -lgltt and -lttf to your Makefile to link the libraries.) After all that, you don't
+  need much more than the tiny bit of documentation to get going. The vectorisation, triangulation
+  and polygonisation of the fonts are only needed for fancy stuff such as is contained in the
+  extrude example on the gltt home pages, but it looks pretty fiddly as you shall see. The plain fonts
+  and the outline fonts give you text that you can manipulate in a three dimensional world, and it is
+  vector output, so it will print if you output to postscript or pdf (see the last section). 
+  </p>
+
+</blockquote>
+</p>
+<h1 align="center"> <a name="TrueTypeFont2"> Using TrueType-2 Fonts </a></h1>
+<blockquote>
+<p>
+Truetype-2 comes packed with most Linux distributions. You need to download and compile
+<a href="http://oglft.sourceforge.net"> OGLFT </a> and <a href="http://linas.org/gle/index.html"> GLE </a>.
+Make sure you have installed the development files for libxt and libXu. Oh, and it want's qt-3.3 as well.
+You might get some compile errors, I found to fix these I had to hack the OGLFT.h file doing a couple of things
+like  <br/><br/>
+/* #include <qstring.h>   (compiler cant seem to find it so I replaced this with the following line) */ <br/>
+#include "/usr/lib64/qt-3.3/include/qstring.h"
+<br/><br/>
+if it complains about anything else like that, just search for where it is on your system and modify OGLFT.h accordingly.
+
+Now you are ready to go.
+ Add -lOGLFT to your Makefile (you don't have or need -lttf).
+Apart from that,  I found no problems. There is one thing I should mention. Suppose you want to make a graph
+with numbers along the axes. Each text output does a right shift on the current OpenGL matrix. So, for instance
+the y axis numbers will not be above each other. To cure this, just use glPushMatrix() before drawing a piece
+of text and glPopMatrix() after. There are some tutorials available at the site where you download
+ <a href="http://oglft.sourceforge.net"> OGLFT </a> from.
+</p>
+<br/>
+<a href="#start" > Back to list of contents</a>
+
+</blockquote>
+<h1 align="center"> <a name="postscript" > Postscript Output </a></h1>
+</blockquote>
+<p>
+You can get good quality vector output using <a href="http://www.geuz.org/gl2ps/"> gl2ps </a>.
+This time, all you need to do is incorporate the header file and the gl2ps c programme into
+your OpenGL programme. It comes with a nice pdf documentation, along with an example of how
+to use it on page 10. It's very good, and I don't need to add anything here.
+
+
+</p>
+
+  <br/>
+<a href="#start" > Back to list of contents</a>
+
+</blockquote>
+<p>
+<a href="index.html"> Back Home </a>
+</p>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></center>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-379628-1";
+urchinTracker();
+</script></body>
+</html>
+

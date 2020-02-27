@@ -1,0 +1,422 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name=Description" content="Getting Started With PHP"><br/>
+<title>Chris Godsalve. Getting started with PHP</title>
+
+<style type="text/css">
+@import url(cochise.css);
+</style>
+
+</head>
+<!-- Background white, links blue (unvisited), navy (visited), red
+(active) -->
+<body>
+
+<blockquote> Copyright &copy 2004 C. Godsalve, all rights reserved.</blockquote> <br clear="all" />
+
+<h1 align="center"> <a name="start">Getting Started With PHP </a> </h1>
+
+<ul>
+<li> <a href="#intro" > Introduction </a></li>
+<li> <a href="#basic" > The Basics </a></li>
+<li> <a href="#form" > A basic Form With E-Mail </a></li>
+<li> <a href="#file" > Using the File System </a></li>
+<li> <a href="#upload" > Uploading Files </a></li>
+<li> <a href="#mysql" > The PHP MySQL interface </a></li>
+</ul>
+
+
+<h1 align="center"> <a name="intro">Introduction </a> </h1>
+<blockquote>
+<p>
+Why bother with yet another scripting language? After all, perl can do anything PHP can do. Well, it's
+in very common use, so  you may as well know a bit about it, and it's easy, so it won't take much learning anyway, not
+only is it easy, but it makes a lot of dynamic web pages pretty easy to make. Whatever webserver you use has to be php enabled, but no access to your webserver's cgi-bin is required. <p>
+
+<p>
+So, how do you get started? I cannot say what you do on windows, or even on other versions of Linux. Whatever happens, first you need a webserver. Why not run your own? I shall assume you have Apache running, as I am running Apache2. I gave a brief outline of setting up Apache in <a href="CGI.html"> Getting Started with CGI </a>. On SuSE 9.0 professional, php is somewhere on the installation discs, so if you have SuSE 9.0, all you need to do is use YaST (the setup tool on SuSE), and install apache2-mod-php4, mod_php4-core, phpdoc, and selfphp. Then restart Apache, save the runlevels, and eveything should be fine. Other (and older) versions of Linux may require something else, and as for microsoft or Mac, I have no idea. I am sure you can find something out there on the web for your computer and operating system.
+
+Next in the
+Apache's htdocs directory (if you're running Apache), open a new file phpinfo.php and type in <br/><br/>
+
+&lt html &gt <br/>
+
+&lt head> &lt title &gt Info &lt /title &gt &lt /head &gt <br/>
+
+&lt body &gt<br/>
+&lt ? phpinfo(); ? &gt <br/>
+
+&lt /body &gt <br/>
+&lt /html &gt <br/>
+
+</p><br/>
+and save it. (if you have a php enabled webspace elsewhere, it goes wherever you save your html files. You now have your first php document. The php module is running, and the phpinfo(); command
+in the &lt ?   ?p &gt tag outputs a whole bunch of stuff to the browser, telling you in great detail all about how php interacts with your operating system. There you have it, php is up and running in about five minutes. I hope you have the same luck.
+
+
+<br/>
+ <a href="#start" > Back to list of contents</a>
+
+</p>
+</blockquote>
+
+
+<h1 align="center"> <a name="basic" > The Basics </a></h1>
+<blockquote>
+
+<p>
+Now, the opening and closing tag for php can be &lt ? ...php goes here on as many lines as you like ? &gt (as above), if you make the opening tag &lt php ...php goes here, that won't make any difference, and you can use &lt script language="php" &gt as an opening tag, with &lt script &gt to close. The first two are OK for the odd line, but the latter is what you want for a block of php code.
+</p>
+
+<p>
+So, that was the first php command. Note, that as in C, C++, Perl, and Java, any command or instruction has to be terminated with a semi-colon, commands just won't work otherwise. writing to the standard output is the next step.
+For php, the standard output is the browser, and the command to write is echo, so, if you store this  <br/> <br/>
+
+&lt script language=php &gt <br/>
+echo " &lt html &gt "; <br/>
+
+echo " &lt head> &lttitle &gt Info &lt /title &gt &lt /head &gt <br/>
+
+echo " &lt body &gt ";<br/>
+echo " Hello World, this is PHP4! &lt br/ &gt";<br/>
+echo " Yes, yet another \" Hello World \".";<br/>
+
+echo " &lt /body &gt ";<br/>
+echo " &lt /html &gt "; <br/>
+&lt /script &gt <br/> <br/>
+in a file called Hello.php, the browser sees the text inside the quotes just as if it had been reading it from an html file. Note that to print quotes inside the quotes \" is used. You can put comments in the code, that is stuff to help you remember what you have done and how you did it, the php interpreter ignores comments. Anything between /* and */ is a comment, and any line starting
+with # or // is a comment.
+
+Variables are preceded with a $, they are untyped, the php parser will figure out what is what. For instance, try
+adding the lines  <br/> <br/>
+
+$name="Freddie"; <br/>
+$rank="corporal"; <br/>
+$age=22; <br/>
+echo " &lt br / &gt $name is a $rank and he is $age years old"; <br/> <br/>
+to the Hello world code. If you want to print the $ character in an echo statement, it's preceded by a \.
+
+There are some predefined variables called <em>superglobals</em>, for instance $_POST
+contains whatever is got via the POST method of a form. We can also have constants as well as variables. The constant is set, and then cannot be changed. This is achieved via the define function<br/><br/>
+
+define(FIVE, 5);<br/>
+define(PRESIDENT, "Attila the Hun");<br/><br/>
+are examples. </p>
+
+<p> The usual operators, * for times, / for divide and + and - are available, there are also increment operators
++= and -=, for instance $a +=2; $b-=1, and .= which concatenates a string. As usual, = is an assignment operator, it does not mean "equal to". Assignment $a=$b+10 takes what's in b, adds ten to it and stores it in a. Equals as understood in maths is true or false, and the operator == does that job, so 5==3+2 is true (I hope). The usual &gt for less than
+and &lt for less than, with &lt = being less than or equal to are available, and the if statement <br/><br/>
+if( $a &lt $b){<br/>
+      //code to go here<br/>
+      }<br/>
+      else<br/>
+      {<br/>
+      //do the other thing<br/>
+      }<br/><br/>
+is there to use (the else and its codeblock are optional. Code blocks start with { and end with }, and the "else" with its code block is optional. Also,
+the usual || for OR, && for AND and ! for NOT are there as well. In fact all the basic loops and control
+structures are the same as  in <a href="CPP.html"> C, C++ </a>, <a href="Perl.html"> Perl </a>, and <a href="Java.html"> Java </a>.
+
+<br/>
+ <a href="#start" > Back to list of contents</a>
+
+</blockquote>
+
+<h1 align="center"> <a name="form" > A Basic Form With E-Mail </a></h1>
+
+
+<blockquote>
+
+<p>
+
+
+Forms are commonly needed, and provide a method of getting information from someone visiting a web page. We shall
+start off with a simple form here. There are two methods to get data from a form, GET, and POST. GET can be considered
+as archaic and out of use, as it is limited, and is insecure because it sends data in the URL, so always use POST.
+With post, the data arrives separate from the URL after the URL has been transmitted. This is about as simple
+as a form can be.<br/><br/>
+&lt html &gt<br/>
+&lt head &gt &lt title &gt form &lt /title &gt &lt /head &gt<br/>
+&lt body &gt<br/>
+&lt p &gt<br/>
+
+
+&lt script language="php"&gt<br/>
+$name="Freddie";<br/>
+$rank="Corporal";<br/>
+$age=22;<br/>
+echo "&lt br/ &gt $name is a $rank and is $age years old &lt br/ &gt";<br/>
+&lt /script &gt<br/>
+
+
+&lt form  method="POST" action="howold.php" &gt<br/>
+How old is Freddie: &lt input type="text" name="val1" size="10"&gt &lt br/&gt<br/>
+                    &lt input type="submit" name="submitted" Value="How old? &gt";<br/>
+&lt /form &gt<br/>
+&lt /p &gt<br/>
+&lt /body &gt<br/>
+&lt /html &gt<br/><br/>
+This has been saved in testform.php (not html), and we have in howold.php
+
+ &lt script language="php" &gt<br/>
+$fred_age=$_POST[val1];<br/>
+if($fred_age==22){<br/>
+echo "Yes, you got it, Freddie is $fred_age years old";<br/>
+   }<br/>
+else<br/>
+{<br/>
+echo "sorry, Freddie is not $fred_age years old, Freddie is 22, please try again";<br/>
+}<br/>
+$result=($fred_age==22);<br/>
+echo " &lt br / &gt This is a boolean $result if nothing prints it is false, if 1 prints it is true";<br/>
+ &lt /script  &gt <br/><br/>
+
+ In the testform.php, we generate a silly form. The type ="text" bit gives us a text box, and whatever you
+ type in ends up in $_POST in the the howold.php script that is called when the submit button is hit (from
+ action="howold.php"). So all the user has to do is be able to type 22 and submit the form. In the
+ howold.php, we have a variable $fred_age. Now the data in the text box is $_POST[val1] because we put
+ name="val1" when we created the textbox. We do a simple if else, and then point out that you can
+ have  boolean data variables which are 1 if true, and anything but 1 if false. It is that simple.
+ We could have put<br/><br/>
+ header("Location: http:/localhost/testform.php");<br/>
+ exit<br/>
+which would redisplay the form. Sending the output as mail is easy, for instance, if $message is the
+message body><br/>
+$to ="seagods@hotmail.com";><br/>
+$subject="daft form";><br/>
+$mailheaders="From: your home computer\n\n";><br/>
+><br/>
+mail($to, $subject, $message, $mailheaders);><br/>><br/>
+then, given the mail configuration (in this case for postfix) as discussed in <a href="CGI.html"> Getting started with CGI </a>
+ your computer sends the message to you@yourisp.com, so you are informed whenever the form is
+filled in. You might want a reply to, so $mailheaders .= "Reply To: $emailaddress\n\n"; would
+add this, (\n means newline in a string, the message header should usually end in two new lines).
+
+
+<br/>
+ <a href="#start" > Back to list of contents</a>
+
+
+</p>
+</blockquote>
+
+<h1 align="center"> <a name="file" > Using the File System </a></h1>
+
+
+<blockquote>
+
+<p>
+PHP makes it quite easy to use the file system, files can be copied, renamed and deleted, and directories can be opened and closed. For instance, we can step through each file in a directory ans follows. <br/> <br/>
+$my_directory="/home/user/miscellaneous/";<br/>
+$dir=opendir($my_directory);<br/>
+
+while($filename=readdir($my_directory){<br/>
+     if($filename =="."  || filename==".."}{{<br/>
+           //do nothing{<br/>
+	   }{<br/>
+	   else{<br/>
+	   {{<br/>
+	   echo "file=$filename\n";{<br/>
+	   ){<br/>
+close($my_directory){<br/>{<br/>
+
+Similarly fopen($fname,  "option") opens a file. The options are r, w, r+, w+, a, and a+. The r, w, and a options
+are for read, write and append to an existing file. The r+ opens a file for reading or writing, and will create
+a new file if it doesn't exist, and the w+ will also create a file, but can read and write. The "or die" can
+be used just as in perl. There is a file_exists() function to see if a  file exists, and fclose() closes the file.
+reading and writing from and to files are achieved with fread() and fwrite(). The fopen function returns a file
+pointer $fp, say, then fread($fp, $size) will read a chunk from the file. To read all the file at once, set $size=filesize($fp), The fwrite function is simple, its usage is fwrite($fp, "this\n"). The fcopy and frename
+functions take two file pointers as arguments (from and to respectively), fwrite returns the number of bytes written (or false). Also, there is fscanf and fgets. These read strings from the file, and fscanf has an extra
+argument which formats the input. This is the same as in the C programming language. The functions copy,
+rename, read and write all return false on failure, and the "or die" (also or die(message)) construct can be used as in Perl. The unlink function can be used to delete files (use with caution, you cannot get them back.)
+Note, that if the function is preceded by  an @ symbol, warnings from the function are suppressed.
+
+
+<br/>
+ <a href="#start" > Back to list of contents</a>
+</p>
+</blockquote>
+
+
+<h1 align="center"> <a name="upload" > Uploading Files </a></h1>
+<blockquote>
+
+<p>
+
+
+Suppose we want to let the guy reading our page to upload a file to our site. To enable this, edit the
+/etc/php.ini file, and uncomment the upload_tmp_dir, and set it to .tmp, say. You can also change the
+upload limit here if you want, and make sure file_uploads=On. There is a superglobal $_FILES that
+contains an array with the file data. So if name="fname" is used in the form then
+$_FILES[fname][tmp_name] contains the temporary file name on the webserver,  $_FILES[fname][name]
+contains the file name, $_FILES[fname][size] contains the file size, and $_FILES[fname][type]
+contains the file type.<br/><br/>
+&lt html &gt<br/>
+&lt head &gt &lt title &gt upload &lt /title &gt &lt /head &gt<br/>
+&lt body &gt<br/>
+&lt p &gt<br/>
+
+
+&lt script language="php"&gt<br/>
+
+&lt form  method="POST" action="uploadit.php" &gt<br/>
+&lt input type="hidden" name="MAXSIZE" value="2000000" / &gt<br/>
+File to upload:: &lt input type="file" name="fname" size="50"&gt &lt br/&gt <br/>
+&lt input type="submit" name="submitted" Value="Upload" / &gt"<br/>
+
+&lt /form &gt<br/>
+&lt /p &gt<br/>
+&lt /body &gt<br/>
+&lt /html &gt<br/><br/>
+This has been saved in upload.php (not html), and we have in uploadit.php. Note the use
+of the hidden input. The user doesn't see it, but we know what the maximum file size is.
+Once we have the form, we create a directory /tmp/ftpuploads, and make sure its executable
+by everyone. Then we use the following script for uploadit.php.<br/><br/>
+
+&lt script language="php" &gt<br/>
+
+$tempfile= $_FILES[fname][tmp_name];<br/>
+$filename="/tmp/ftpupload/".$_FILES[fname][name];<br/>
+$filetype=$_FILES[fname][type];<br/>
+$filesize=$_FILES[fname][size];<br/>
+
+// script to see if file already exists and ask user to rename their file if it does<br/>
+
+$MAX=$_POST[MAXSIZE];<br/>
+
+if($filesize > MAX){<br/>
+       // maybe script to email admin with request for bigger MAX file;<br/>
+       die("Sorry, you cant upload a file bigger than $MAX bytes ");<br/>
+       }<br/>
+
+
+
+echo $files[fname][tmp_name]."    =temp file &lt br / &gt";<br/>
+echo $files[fname][name]."    =remote filename &lt br / &gt";<br/>
+echo $files[fname][size]."    =size &lt br / &gt";<br/>
+echo $files[fname][type]."    =type &lt br / &gt";<br/>
+
+if( move( $tempfile, $filename){<br/>
+	echo "Success, file uploaded";<br/>
+	// further script, maybe mail to admin that file has been uploaded and by whom<br/>
+	}<br/>
+	else<br/>
+	{<br/>
+	   die("Sorry, upload has failed);<br/>
+	}<br/>
+
+&lt /script &gt<br/><br/>
+
+<br/>
+ <a href="#start" > Back to list of contents</a>
+
+</p>
+</blockquote>
+
+
+<h1 align="center"> <a name="mysql" > The PHP MySQL interface </a></h1>
+<blockquote>
+
+<p>
+Well there you are, suppose you have an online local fruit and veg delivery file, and all your
+customers know that it's afternoon delivery for any orders before 10am, and next day delivery for any orders
+after 4pm. At 10am you run a script that reads all the orders and tells you who wants what and where to deliver that afternoon. You have a database called fruitandveg, your username is fred, and your password for
+entering the database is fredpass. Why not decrement the values instock (number of items in stock)
+look at crit_stock  (the number of items when you must re-order from your suppliers) work out ordered (the number of
+items to be re-ordered), and any other stuff in the fruit and veg database. In fact, as the customers
+fill in there orders, why not update another database table, the one containing the ten O'Clock orders
+when the customers fill in their online order form. With php, this isn't very hard. (There are other ways to do this, it can be done in Perl if you download and install the DBD CPAN bundle for instance).  </p>
+
+<p>
+Recall from <a href="SQL.html"> Getting Started with SQL </a> that fred might start at the command line, and type "mysql -p" to connect to the database. The perl script would do this with the line <br/><br/>
+
+$connection=mysql_connect("localhost", "fred", "fredpass") and die ("Sorry, no AQL connection");<br/><br/>
+Of course, you certainly don't put something like this in a URL that can be seen directly via "view document source", but more on that later. The mysql_connect() function should return a "resource id" which can be
+evaluated as true or false in an if statement. Look at the following php code, which lists the databases
+and the tables in them. <br/><br/>
+
+
+
+
+$connectsql=mysql_connect("localhost", "daddio", "wreck99X") <br/>
+or die("Sorry, cannot connect to database"); <br/>
+
+if($connectsql){ <br/>
+ echo "success on connection to mysql &lt br/>"; <br/>
+} <br/>
+
+$dbasenames=mysql_list_dbs($connectsql); <br/>
+$nbases=mysql_num_rows($dbasenames); <br/>
+
+echo " &lt ul>"; <br/>
+$i=0; <br/>
+while($i &lt  $nbases){ <br/>
+
+	$dbnames[$i]=mysql_tablename($dbasenames,$i); <br/>
+	echo " &lt li> $dbnames[$i]  &lt /li>"; <br/>
+	$table_list=mysql_list_tables($dbnames[$i]); <br/>$j=0; <br/>
+   	echo " &lt ul>"; <br/>
+   	$ntables=mysql_num_rows($table_list); <br/>
+   	while($j &lt $ntables){ <br/>
+      		$tables[$j]=mysql_tablename($table_list,  $j); <br/>
+      		echo " &lt li>$tables[$j] &lt /li>"; <br/>
+      		$j++; <br/>
+   	} <br/>
+   echo "&lt /ul>"; <br/>
+
+
+$i++; <br/>
+} <br/>
+
+echo "&lt /ul>"; <br/> <br/>
+First, we connect to the database, and give an error message if we cant, we should have error handling
+for the other mysql functions, but leave it out for readability. First we declare a variable $dbasenames
+which holds the output of mysql_list_dbs (list all the databases through $connectmysql). We also get the
+number of items in the list £nbases through mysql_num_rows, note its argument is $dbasenames. We then start a while loop, and get the actual database names ($dbnames[$i]) through $dbasenames using mysql_table_names.
+and the list of tables $table_list through mysql_list_tables. This takes the name of the database, and
+$table_list is used as the argument for mysql_num_rows, which returns the number of tables in the list.
+We begin the internal loop, and use mysql_tablename to get the names of the tables in the list, and
+print it all out as a nested unordered list.  </p>
+
+<p>
+There was a mysql_create_db function to create a new database, this is now obsolete. What is used now
+is the mysql_query("   whatever ") where the string whatever is what you would type at the mysql prompt.
+Try, mysql_query("CREATE DATABASE flowers",$connectsql), for instance. Does it fail? If so, you don't have permission
+to create a new database. As root, go into mysql and GRANT ALL ON *.* TO username@localhost IDENTIFIED BY
+"userspassword"); That should do the trick. Now, if you run the php function that creates the database again, it will fail, but this time because there already is such a database. To delete, use mysql_query("DROP DATABASE "flowers",$connectsql).
+
+
+<br/>
+ <a href="#start" > Back to list of contents</a>
+</p>
+</blockquote>
+
+
+<h1 align="center"> <a name="next" > What Next? </a></h1>
+
+<p>
+We saw in the last section how mysql_query behaves as the SQL command line, and after that, there is not much
+more to be said, the rest is all SQL. For a complete list of PHP functions, including the mysql_ type functions there is always the <a href="http://www.php.net/manual/en/index.functions.php"> php manual. </a>.
+There are many issues discussed at php net, security being important issue. We have not discussed
+security  at all here, but with php, file uploading, sql, it is clear that if you are running these
+through a webserver, you could be asking for trouble. The best way to keep out of trouble is through input verification. When you get any data through POST from outside, make sure the input is valid. Generally, make sure the input is strictly alphanumeric. The use of preg_match, preg_match_all, preg_replace on regular expressions is a valuable resource here. Never trust any user input! I might add more to this document later,
+ and hopefully iron out the mistakes that must be in it. However, for the now, that's it.
+
+<blockquote>
+
+<p>
+last update 15th September 2004.
+
+<br/>
+ <a href="#start" > Back to list of contents</a>
+</p>
+</blockquote>
+<p>
+<a href="index.html"> Back Home </a>
+</p>
+
+
+</body>
+</html>

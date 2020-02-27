@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name=Description" content="Getting Started With SQL"><br/>
+<title>Chris Godsalve. Getting Started With SQL</title>
+
+<style type="text/css">
+@import url(cochise.css);
+</style>
+
+</head>
+<!-- Background white, links blue (unvisited), navy (visited), red
+(active) -->
+<body>
+
+
+<blockquote> Copyright &copy 2004 C. Godsalve, all rights reserved.
+</blockquote> <br clear="all" />
+
+<h1 align="center"> <a name="begin">Getting Started With SQL </a> </h1>
+
+<ul>
+<li> <a href="#Intro" > Introduction </a></li>
+<li> <a href="#root" > Starting off as Root </a></li>
+<li> <a href="#create" > Creating a Database</a></li>
+<li> <a href="#select" > Using Select</a></li>
+<li> <a href="#moving" > Moving On </a></li>
+</ul>
+
+<h1 align="center"> <a name="intro">Introduction</a> </h1>
+
+<blockquote>
+<p>
+SQL  stands for Structured Query Language, which is an ANSI standard for working with Relational Database Management Systems (RDBMS).
+There are many of these, Oracle being one of many. This particular introduction uses MySQL which is open source. If you don't have
+an RDBM, this isn't a bad option, so , just go to the <a href="http://www.mysql.com/">SQL website</a>. This introduction has a bias towards MySQL and Linux. If you're a linux user, then you probably have
+MySQL on the install discs. Go to add/remove software and install it if it's not installed already, make sure it's running, and
+choose the appropriate runlevels that you want.
+Note
+that I am writing this as a few notes to myself, this might not be quite what <em>you </em> want, if not there's plenty more
+out there on the web. There are a couple of useful pointers in the "Moving On" section.
+
+
+</p>
+</blockquote>
+
+
+
+
+<h1 align="center"> <a name="root">Starting off as root</a> </h1>
+
+
+<blockquote>
+<p>
+Now, once MySQL is installed and running, you can run it simply by opening up a console, and typing "mysql -u root &lt RETURN &gt. Then you should
+see "mysql &gt" as the prompt. The -u option specifies the user, we want to go in
+for the first time as root. Now, create a database! At the mysql prompt, type create database whatever, hit return, and you will see something like this on the screen.
+<br/><br/>
+mysql &gt create database fruitandveg;
+<br/><br/>
+(Don't forget the semi-colon.) You should get a message saying OK, one row affected. Now
+<br/><br/>
+show databases;
+<br/><br/>
+Again, don't leave off the semi-colon, you should get something like this.
+<br/><br/>
++------------------+<br/>
+| Database         |<br/>
++------------------+<br/>
+| fruitandveg      |<br/>
++------------------+<br/>
+| mysql            |<br/>
++------------------+<br/>
+| test             |<br/>
++------------------+<br/>
+3 rows in set (0.00 sec)
+<br/><br/>
+Now, let's set the root password, this is done as follows <br/><br/>
+SET PASSWORD FOR 'root'@'localhost'=PASSWORD(TopSecret);<br/><br/>
+The single quotes are needed, and again, don't forget the semi colon.
+The PASSWORD() is a function that encrypts whatever you substitute for TopSecret
+and stores it in the password table. To access mysql with a username and password, you type mysql -u username -p at the command line, and then mysql will prompt you for
+the password. Suppose, when you aren't being superuser, your username is fred, and
+your password is fredpass. To grant yourself permission, you need <br/><br/>
+
+GRANT ALL ON fruitandveg.* TO fred@localhost IDENTIFIED BY "fredpass";<br/><br/>
+So now you can exit the database and access mysql as fred. Suppose you do
+this, and type show databases, and that this time, you forgot the semi-colon.
+What you see is "->". This prompt means that mysql knows that the command isn't finished, this time it's because there was no semi-colon. Just type "; &lt RETURN &gt and you will be
+back to the mysql prompt with the command completed. Now, type "exit &lt RETURN &gt" to get out of the mysql client, and go back in
+with your username and password.
+
+<br/> <a href="#begin"> Back to list of contents </a><br/>
+</p>
+</blockquote>
+
+
+
+<h1 align="center"> <a name="create"> Creating a Database </a></h1>
+<blockquote>
+<p>
+It's time to create a table. Any database consists
+of one or more tables. This is how it's done. At the mysql prompt, we have to
+tell mysql which database is to be used, then we use the CREATE TABLE command and hit return. We now have the "->"prompt. Type "(" and hit return, then type in what you are going to put in each column, close with ); and your back at the mysql prompt. Here is how a session might looks on screen.<br/><br/>
+mysql &gt use fruitandveg; <br/>
+mysql &gt CREATE TABLE fvdata <br/>
+	->(<br/>
+ 	->fvid int unsigned not null auto_increment primary key,><br/>
+ 	->fvname varchar(30),><br/>
+	->soldat int,><br/>
+ 	->boughtat int,><br/>
+ 	->instock int,><br/>
+	->ordered int><br/>
+ ->);  <br/> <br/>
+Query OK, 0 rows affected (0.02 sec)><br/>
+mysql &gt show tables;<br/>
++-------------------------+<br/>
+| Tables_in_fruitandveg   |<br/>
++-------------------------+<br/>
+| fvdata                  |<br/>
++-------------------------+<br/>
+1 row in set (0.00 sec)><br/><br/>
+
+Apart from the fvid line, it's pretty obvious what is going on. The second column
+is the name of the item as a character string. Then soldat is an integer, as is
+boughtat, instock, and ordered. So, punnets_strawberry might be an item, we might
+by them at 50p, sell them a 150, have 10 in stock, and have another 50 punnets on order. The only complicated  one is fvid. This is to be a unique id number. Its
+an unsigned integer, it is "not null", it must have and id, we use auto_increment,
+and primary key helps for fast searching. So, fvid is an integer,  but an integer
+with all those attributes. </p>
+
+<p>
+Now, to see what the table columns are in any table, we use "describe" as in
+<br/><br/>
+mysql &gt describe fvdata;
+<br/><br/>
+Now, about those strawberries, we can use INSERT INTO, to get some data into the
+table.<br/><br/>
+
+mysql &gt INSERT INTO fvdata<br/>
+ ->(fvname, boughtat, soldat, instock, ordered)<br/>
+	->values<br/>
+ 	->("Strawberry_Punnet", 150, 50, 10, 50);<br/><br/>
+	Note the quotes for the fvname entry. If you leave them out, mysql will think
+	that Strawberry_Punnet is an integer which it should have a value for.
+Now, we might have a huge files on a computer, one with this kind of data in it already, and we certainly don't want to sit for hours typing such stuff at a keyboard. If the
+data is already stored electronically, write a program that writes all the commands
+into a file called fruitandveg.dat. Then at the command line it's <br/><br/>
+
+mysql fruitandveg &lt  fruitandveg.dat -u fred -p  <br/><br/>
+This will run all the commands in fruitandveg.dat.
+
+<br/> <a href="#begin"> Back to list of contents </a><br/>
+</p>
+</blockquote>
+
+<h1 align="center"> <a name="select">Using Select</a> </h1>
+
+<blockquote>
+<p>
+ Now, we can try our first query in SQL using SELECT. Just try running "select fvid from fvdata;", then "select ordered, instock from fvdata;", at the mysql prompt and you will see the output. If you add some more entries, for cabbages and pears say, you can see that select displays the
+data for the entire column. </p>
+
+<p>Suppose you want the output for SavoyCabbages, here you can use select with "where", so you "select ordered from fvdata where fvname="SavoyCabbages". What follows "where" can be a list of conditions. We can have != for not equal, &lt for less than, >= for greater than or equal. Other Operators are AND, OR, and NOT.
+
+</p>
+<p>
+There is also LIKE, so "where fvname LIKE S%"
+will give you any thing where the fvname entry starts with S. if we used S%, or %S%,
+that would give everything ending with an S or containing an S respectively. Here % is
+used as a wildcard, NOT LIKE %D%will give you anything that doesn't contain a D. There is also BETWEEN, for instance "where soldat BETWEEN  100 AND 200;" will list all the data where the price is between 100 and 200. (Here AND
+is not the logical AND.) This could be used as "where soldat &gt 100 AND soldat  &lt 200;". Else, there is IN or NOT IN, for instance "where fvname NOT IN ('Bananas', 'Strawberry_Punnet', 'Kiwi_Fruit');.
+</p>
+Sorting is something that is frequently asked of a database. The SELECT command can
+be used to achieve this. At the mysql prompt, "SELECT soldat from fvdata ORDER BY soldat;" will do just that. It works on strings too, so you can put things in alphabetical order. If you want to reverse the order, just use "SELECT soldat from fvdata ORDER BY soldat DESC;" instead.
+
+</p>
+<p>
+If you only want say, to start off at row 10,
+and then select the following 20 items you would use LIMIT. This is used as
+"select fvname, iordered from  fvdata LIMIT 10, 20;". If you miss out the 10, it will
+start at row 1 instead. Another useful item is DISTINCT. Suppose you wanted to list all
+the values of soldat, but you didn't want the list to contain all long lists of 99, or 60, just one of every price is what you want. To do this use "select DISTINCT" instead of select.
+</p>
+<p> There are some nice functions that you can use after select, in the way that DISTINCT was used above. These are MIN(), MAX(), SUM(), AVG() and COUNT(). For instance "select avg(soldat) AS 'Average Price' from fvdata. This will output
+the average of soldat, except the column title is "Average Price". You can also
+do simple maths. For instance "select (SUM(soldat)/SUM(boughtat)*100) from fvdata;"
+will give you something fairly meaningless, but you can do it.
+
+
+
+
+<br/> <a href="#begin"> Back to list of contents </a>
+
+
+
+</p>
+</blockquote>
+
+
+
+
+<h1 align="center"> <a name="moving">Moving On</a> </h1>
+
+
+<blockquote>
+<p>
+
+At this point, we have got MySQL up and running, created a database, added
+a table to it, entered data, and used mysql to query the data. That is
+we have got started. I could at this point continue with how to update the data, delete row, and so on, but instead I shall refer you (and myself) to this
+ <a href="http://www.webdevelopersnotes.com/tutorials/sql/index.php3">tutorial for MySQL</a>. It's time to discuss some issues that are not covered by that tutorial.
+
+Lets think about the guy with the username fred, suppose we want to trust fred with the fruitandveg database. <br/> <br/>
+
+
+mysql>GRANT SELECT, INSERT, UPDATE, DELETE <br/>
+    ->ON fruitandveg.* TO fred@localhost <br/>
+    ->IDENTIFIED BY 'fredpass'; <br/> <br/>
+Allows fred to INSERT, SELECT, UPDATE, and DELETE from the database, but later, we find fred has deleted important entries, so we use REVOKE,  <br/> <br/>
+REVOKE DELETE   ON fvdata   FROM fred@localhost; <br/> <br/>
+We might be fed up with fred, and revoke his privileges altogether, at least on our
+all important fruitandveg database. <br/> <br/>
+mysql>REVOKE ALL PRIVILEGES ON fruitanvef.*  <br/>
+    ->FROM fred@localhost; <br/> <br/>
+
+
+
+While this would result in all privileges being revoked from the user fred, it would not delete the relevant rows from the privilege tables! If we want to fire fred, or disallow him from using mysql, we would completely remove fred from the database privilege table, as, as follows:<br/>
+
+mysql>DELETE FROM user WHERE user = 'widgetAdmin';<br/>
+Query OK, 1 row affected (0.00 sec)<br/>
+mysql>flush privileges;<br/><br/>
+
+
+Now, that's a little admin dealt with, you could also use mysqladmin at the command prompt, but we shan't go into that here. If you're administrating the database, then
+you shall make backups with mysqldump. Do man mysqldump, and all will be revealed!
+Another useful tool is mysqlhotcopy, to find out about this, do perldoc mysqlhotcopy.
+
+Now, you might want to use the output from the database as input for a perl
+script, if you want to do this use the perl DBI module, install it from CPAN
+if you don't have it, and then use perldoc to find out what it does. Using this,
+you can use your webserver to update your database via CGI, here are some
+<a href="http://home.ubalt.edu/abento/752/dbi/mysqlcgi.html" > examples</a>.
+If your cgi script is running from a 1000 different requests, apache will load
+the perl interpreter 1000 times, and run  the perl script a 1000 times. If heavy usage is predicted, install <a href="http://perl.apache.org/docs/1.0/guide/install.html"> mod_perl
+</a>. With mod_perl running, a single script is always on the lookout for
+requests, and this particular problem is then avoided. (However, errors can now build up, whereas
+without mod_perl, any errors vanish when the script has finished, so mod_perl can be a double edged sword.)  Now you are started, good luck!
+
+
+
+
+
+<br/> <a href="#begin"> Back to list of contents </a>
+
+
+</p>
+</blockquote>
+
+
+
+<p>
+<a href="index.html"> Back Home </a>
+</p>
+</body></html>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+/* Comments in cascading style sheets are use C type notation */
+
+body {
+background-color:#999999;
+ color:#999999;
+ font-size:16pt;
+ background-image:url("pattern.jpg");
+ background-repeat:repeat-xy
+}
+
+
+h1{color:#FFFFCC}
+h2{color:#FFFFCC}
+
+p{color:#FFFFCC}
+
+p2{color:geen}
+
+blockquote{color:#FFFFCC;
+          font-size:14pt;
+	  float:right}
+ul{color:#FFFFCC}
+
+
+/* this is how anchor colors are set */
+a:link{color: #CCCCFF}
+a:active{color: red}
+a:visited{color: magenta}
+
+table{color:#FFFFCC}
+
+ol{color:#FFFFCC}
+
+/*
+Measurements
+
+eg
+p{text-indenr:2px}
+
+Units can be
+
+cm	centimeters
+em	widths of "m"
+ex      height of an "x"
+in	inches
+mm	milimeters
+pc	pica=1/6 of an incg
+pt	point 1/72 inches
+px	pixels
+
+font propertise
+
+font
+font-family
+font-size
+font-style
+font-variant
+font-weight

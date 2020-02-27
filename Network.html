@@ -1,0 +1,502 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name=Description" content="Migrating to linux">
+<title> Chris Godsalve, Network BT homehub</title>
+
+<style type="text/css">
+@import url(cochise.css);
+</style>
+
+</head>
+<!-- Background white, links blue (unvisited), navy (visited), red
+(active) -->
+<body>
+
+<h1> Simple Networking  </h1>
+
+<h2> Contents </h2>
+
+<ul>
+<li> Introduction </li>
+<li> Some Useful Links </li>
+</ul>
+
+<h1>  Introduction </h1>
+
+<p>
+I had just a  Desktop PC running Ubuntu linux and nothing else. Suddenly I seem to have acquired a laptop (dual boot windows 8 and Ubuntu) and an android tablet on which I installed androidVNC.
+The tablet (a Motorola Xoom MZ604 with 32GB internal SD card and 1GB RAM) that is set up so it can run openSuSE linux.  Oh yes, and a wireless enabled printer as well. The obvious thing to do is network them!
+ </p>
+<p>
+This article tells you how I got on... 
+</p>
+
+<h1> First Stop, the Router </h1>
+<p>We assume you know what an IP address is, and that the MAC addresses are <I>physical</I> device
+addresses. Anyway, we start off with our router.
+We have a standard household BT home hub (BTHub3-78RXZ). Let's pay it a visit. On a first visit, it will ask you to reset the admin password for the hub. Some  adresses for typical routers are 192.168.0.1, 192.168.1.1,  192.168.2.1, and 192.168.123.254. For the BT hub, it's http://192.168.1.254/. Also, we  have
+an easy to remember http://bthomehub.home/ for the BT hub as well. Just type that into the browswers address bar, and you are there.
+To start with, I shall forget the tablet, and forget the printer. We have the laptop (RoverBeast) on, and running Ubuntu Linux, and the Desktop (BigBeast) is also switched on and running. 
+The PC desktop has no wireless card, and is wired in to the router, and the laptop sees the homehub through
+a wireless connection. The router has tabs called Home, Services, Settings, and Troubleshooting. Under Home, I see (under "My Home Network) I see
+<br/><br/>
+Wireless network:	RoverBeast	B8:76:3F:81:A0:06<br/>  <!--B8:76:3F:81:A0:06 -->
+Ethernet:	BigBeast	00:1C:C0:7D:CB:F3<br/><br/>  <!--00:1C:C0:7D:CB:F3 -->
+</p>
+<p>
+So, the desktop and the laptop are there as expected. We need the hub's admin password to get into settings.
+Be sure to use advanced settings as well in order to get the most information.
+Under settings-> wireless we see 
+
+Wireless network/SSID: 	BTHub3-78RZ<br/><br/>
+Security: 	<br/>
+	  WPA & WPA2 (Recommended)<br/>
+Wireless key (WPA & WPA2): [Box with wireless key in it=73a74e2de8] <br/><!-- 73a74e2de8 -->
+Wireless interface type: Box with [802.11 b/g/n (Recommended)] <br/>
+	
+Channel selection: 	
+MAC Address: 	20:2B:C1:6A:FD:C9	<br/> <br/>          <!-- 20:2B:C1:6A:FD:C9-->
+
+If I click on BigBeast (the Desktop) I see that<br/> <br/> 
+MAC address: 	00:1C:C0:7D:CB:F3<br/> 
+IP address assignment: 	DHCP<br/> 
+IP address: 	[Box with 192.168.1.64] <br/> <br/> 
+and for RoverBeast, I get <br/> <br/> 
+MAC address: 	B8:76:3F:81:A0:06 <br/>  <!--  B8:76:3F:81:A0:06 -->
+IP address assignment: 	DHCP<br/> 
+IP address: [Box with 192.168.1.64] <br/> <br/> 	
+
+So, both machines have the same IP address, but the two machines are distinguished from each other
+in the network by having different physical MAC addresses. We also have that Channel Selection MAC address under security.
+ There is also a Channel Selection
+ MAC address. Looking through the hub's "advanced settings" we see that the hub has 
+two MAC addresses 20:2B:C1:6A:FD:C8 for it's wired connection and 20:2B:C1:6A:FD:C9 for its
+wireless connections - this is the only one that needs security and that's why its the only
+one of the two to show up under security.
+This seems to be all the useful information that I can get from the router. So, what next?
+</p>		
+
+<h1> Finding out a bit more</h1>
+
+
+<p>
+In this section, we shall start to look at some basic linux/UNIX network commands. 
+The first is ifconfig (interface configuration). This is a part of UNIX. Though it's used to configure
+ networks, just doing "ifconfig" in a terminal will give you some network information.
+By "a terminal" I really mean "in a terminal emulator window" if you want me to a bit precise.
+In a UNIX terminal, you type a command (such as env or pwd or ls) and hit the enter button.
+It's useful to get used to using the "command line" in a terminal.
+The iwconfig command is similar to ifconfig but specialised for wireless networks: it isn't part of linux/UNIX in itself.
+The iwconfig command xomes with the "wireless-tools package". Any linux distribution
+will allmost certainly have installed the wireless-tools package when you installed linux.
+So  you almost certainly have iwconfig. If not, install that wireless-tools package now.
+</p>
+
+<p>
+On a linux terminal we can get a bit more information. On my desktop,  I get <br/><br/>
+
+eth0      Link encap:Ethernet  HWaddr 00:1c:c0:7d:cb:f3  <br/>
+          inet addr:192.168.1.64  Bcast:192.168.1.255  Mask:255.255.255.0<br/>
+          inet6 addr: fe80::21c:c0ff:fe7d:cbf3/64 Scope:Link<br/>
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1<br/>
+          RX packets:55285 errors:0 dropped:0 overruns:0 frame:0<br/>
+          TX packets:47401 errors:0 dropped:0 overruns:0 carrier:0<br/>
+          collisions:0 txqueuelen:1000 <br/>
+          RX bytes:53997589 (53.9 MB)  TX bytes:7329221 (7.3 MB)<br/>
+          Interrupt:20 Memory:e3200000-e3220000 <br/><br/>
+
+lo        Link encap:Local Loopback  <br/>
+          inet addr:127.0.0.1  Mask:255.0.0.0<br/>
+          inet6 addr: ::1/128 Scope:Host<br/>
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1<br/>
+          RX packets:4331 errors:0 dropped:0 overruns:0 frame:0<br/>
+          TX packets:4331 errors:0 dropped:0 overruns:0 carrier:0<br/>
+          collisions:0 txqueuelen:0 <br/>
+          RX bytes:361117 (361.1 KB)  TX bytes:361117 (361.1 KB)<br/><br/>
+
+On the laptop I get<br/><br/>
+
+eth0      Link encap:Ethernet  HWaddr 74:46:a0:86:43:5e  <br/>
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1<br/>
+          RX packets:55285 errors:0 dropped:0 overruns:0 frame:0<br/>
+          TX packets:47401 errors:0 dropped:0 overruns:0 carrier:0<br/>
+          collisions:0 txqueuelen:1000 <br/>
+          RX bytes:53997589 (53.9 MB)  TX bytes:7329221 (7.3 MB)<br/><br/>
+
+lo        Link encap:Local Loopback  <br/>
+          inet addr:127.0.0.1  Mask:255.0.0.0<br/>
+          inet6 addr: ::1/128 Scope:Host<br/>
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1<br/>
+          RX packets:399 errors:0 dropped:0 overruns:0 frame:0<br/>
+          TX packets:399 errors:0 dropped:0 overruns:0 carrier:0<br/>
+          collisions:0 txqueuelen:0 <br/>
+          RX bytes:31421 (31.4 KB)  TX bytes:31421 (31. KB)<br/><br/>
+
+wlan0     Link encap:Ethernet  HWaddr b8:76:3f:81:a0:06  <br/>
+          inet addr:192.168.1.68  Bcast:192.168.1.255  Mask:255.255.255.0<br/>
+          inet6 addr: fe80::ba76:3fff:fe81:a006/64 Scope:Link<br/>
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1<br/>
+          RX packets:10530 errors:0 dropped:0 overruns:0 frame:0<br/>
+          TX packets:1286 errors:0 dropped:0 overruns:0 carrier:0<br/>
+          collisions:0 txqueuelen:1000 <br/>
+          RX bytes:64371 (64.7 MB)  TX bytes:19782 (19.7 KB)<br/>
+</p>
+
+<p>
+On the desktop, iwconfig rightly tells me that there are no wireless connections.
+The laptop's iwconfig outputs<br/><br/>
+wlan0     IEEE 802.11bgn ESSID:"BTHub3-78RXZ"<br/>
+          Mode:Managed frequency:2.462 GHz Access Point 20:2B:C1:6A:FD:C9<br/>
+          Bit Rate=1Mb/s Tx-Power=20 dBm<br/>
+          retry long limit:7 RTS thr:off Fragment thr:off<br/>
+          Power Management:off<br/>
+          Link Quality=70/70 Signal level=-39 dBm<br/>
+          Rx invalid nwid:0 Rx invalis crypt:0 Rx invalid frag:0<br/>
+          Tx excessive retries:39 Invalid misc:48 Missed beacon:0<br/><br/>
+The first line gives the correct wireless connection type - which we saw on the hub,
+ and also the MAC address we saw under Channel Selection on the hub.
+Notice we have two different IP addresses under "inet" here. We have  192.168.1.68
+under wlan0 for the laptop, and 192.168.1.64 for the desktop under eth0.
+</p>
+
+<p>
+You may or may not have the "lynx" or "curl" programs installed. Why not imake sure you have both!
+Curl is a command line tool that can transfer data to and
+from a server, and lynx is a text based web browser you can run in a terminal. We can 
+get our IP address as seen from the outside world using either. They might sound quaint
+ because the access the web from a terminal, but
+ both are quite powerful tools. Doing either "curl http://ipecho.net/plain; echo" or "lynx --dump http://ipecho.net/plain" as terminal commands will give you your external IP address. Obviously the ipecho.net site does exactly that: it
+echos the IP that sends it a request. Doing this on the desktop is (at the moment) 81.81.156.89.35,<!-- 81.156.89.35 --> and
+doing the same on the laptop gives exactly the same IP. That is to say, this is the router IP address as far as the outside world is concerned. If I am on BigBeast, I can see my IP address as far as the local
+ network is concerned doing "ping BigBeast"  in a terminal. Just &lt Ctrl &gt to stop it.
+</p>
+
+<h1> Setting Up Telnet, Ssh, and Ftp </h1>
+
+<p> There are two easy ways to remote login from one machine to another via a terminal. These are
+ telnet and ssh. There's an easy to use terminal based file transfer program called ftp as well.
+Suppose you are on RoverBeast, and telnet is up and running. You type in "telnet BigBeast" at a terminal,
+ and there you are. You log in to BigBeast, you now have a terminal on RoverBeast's windows 
+acting as a terminal on BigBeast. You can run a program on BigBeast for instance, or move and edit files
+on BigBieast's hard drive. Here BigBeast is the "host" and "RoverBeast" is the client.
+Using telnet, it <I>should</I> be easy to get the host machine to display an X-Windows program output 
+(being run on the host)  on the client machine. For some reason I have problems doing this on my local network: never mind,  we can use ssh (secure shell) and that uses dual key encryption to boot. 
+Nevertheless, I shall mention what should have worked anyway.
+</p>
+<p>
+So, telnet is a nice easy terminal based way to get into another machine in your local network. 
+You can telnet to machines not on your local network, like another company for instance.
+Telnet is standard  UNIX/linux, so you don't need to install anything to be a telnet client.
+ Let's try it and see what happens! Suppose I am on BigBeast
+and I am "in a terminal". If I do "telnet Roverbeast" from a terminal, I get <br/><br/>
+Trying 192.168.1.68...<br/>
+telnet: Unable to connect to remote host: Connection refused<br/><br/>
+So, the good news is that telnet understands that RoverBeast is that 192.168.1.68 IP address.
+It has got a message back that the connection is refused. I get the same if I try and telnet into BigBeast
+ from RoverBeast. It understands the IP address is 192.168.1.64 from the name BigBeast, but the connection is refused. What's the problem? Both machines are automatically telnet clients but not telnet <I>servers</I>.
+On Ubuntu all we have to do is open up system settings, and then 
+ install telnetd. It will be just as easy on any linux distribution.
+ When you reboot, it will be running the telnet "daemon" telnetd. If you had 
+checked out the file /etc/inetd.conf you will have  seen that telnetd was in that initialisation  file even before you installed telnetd. Here is my /etc/inetd.conf file line for telnet.<br/><br/>
+#:STANDARD: These are standard services.<br/>
+telnet		stream	tcp	nowait	telnetd	/usr/sbin/tcpd	/usr/sbin/in.telnetd<br/><br/>
+So, now if I do "telnet RoverBeast" from a terminal on BigBeast, I get to log into RoverBeast
+with username and password. I can use a command line editor, run programs, and pretty well
+anything I want. To log out of RoverBeast, all I do us use "exit", and the terminal is handed
+back to BigBeast. But (for me somehow) there is a snag...
+</p>
+<p>
+So, suppose I have a program that opens up a window. For instance I have a simple
+program that allows you to view, rotate, and move a dodecahedron in a window. It's called Dodec. 
+If I am on RoverBeast, and run Dodec, all is fine. If I do "env | grep DISPLAY" in a terminal,
+ it tells me that the environment variable DISPLAY is set to ":0" (it could be :0.0 on other machines). 
+Now, suppose I want to run Dodec on BigBeast from a terminal on RoverBeast.
+ I can telnet into BigBeast and try and run Dodec, but I shall get error messages, or nothing
+will happen. To see why,  I now do "env | grep DISPLAY". This  might not even output
+ anything at all, in which case the DISPLAY variable hasn't even been set yet. The terminal is running the "bash shell", in which case I can set the DISPLAY variable by doing
+  "export DISPLAY=:0". (On a c-shell terminal the same thing is done
+ using "setenv DISPLAY=" instead of "export".) Now if I run Dodec from the terminal on RoverBeast, I see the
+ window  displaying a dodecahedron appear on BigBeast: not on the client machine!
+Now, we want the output of Dodec being run on BigBeast to appear on RoverBeast's screen.
+To do this <I>we need to allow BigBeast to output to RoverBeast's X-Windows display</I>.
+At a terminal on RoverBeast, this is done by "xhost + BigBeast" (you might have to install xhost).
+Now I tried (for "export PATH=) RoverBeast:0, 192.168.1.68:0, RoverBeast:0.0, and nothing worked!
+I have used this xhost + and DISPLAY thing regularly on other networks, so I can't figure out
+what is wrong here. Never mind, it might work for you. I can still use telnet to do anything 
+ <I> apart from </I> running programs displaying windows on the client. I mentioned ssh earlier.
+With ssh, we don't need anything like xhost, and we don't have to mess about with environment variables.
+Not only does it take care of all that stuff for you, but uses dual key encryption between the two 
+machines. This means we have to  set up the encryption keys. Let's see how that's done next.
+</p>
+<p>
+First thing off, we need to install the ssh client and server on both machines (and reboot).
+Doing this gives you ssh-keygen and ssh-copy-id as well as ssh server and client.
+Now, I made a directory called ".ssh" on BigBeast's home directory.
+It must be the home directory (a.k.a ~), and it must be called .ssh. You might have a ~/.ssh directory already.  Either way, I changed directory to .ssh in a terminal, and ran
+  the command <br/> <br/> 
+ssh-keygen -t rsa -C "BigBeast" <br/> <br/>
+ This creates a private key ~/.ssh/BigBeast, and a public key called ~/.ssh/BigBeast.pub. Obviously, you will choose different names.
+ I did the same thing (almost) on RoverBeast, so RoverBeast's ~/.ssh directory now has a private key "RoverBeast" and a public key "RoverBeast.pub. 
+From BigBeast, I did  <br/> <br/>
+ssh-copy-id BigBeast.pub username@RoverBeast" <br/> <br/>
+When you do your equivalent, username is whatever your username is, and <I>be sure to type "yes" and not "y"</I>. This will copy
+BigBeast's public key to RoverBeast. I used the same command to copy RoverBeast's public key to BigBeast.
+If you do the equaivalent, ssh can now handle dual encryption messages between the two machines.
+So, on RoverBeast, if I do "ssh BigBeast" I can log in with my password, and everything looks just like telnet.
+Now, what If I want to run that Dodec program so it appears on RoverBeast's screen?
+To do this I have to log out (use "exit" again as you do in telnet). Now, we are going to use
+ ssh again, this time with an option "-X". That is, I type "ssh -X BigBeast". This option
+ will allow BigBeast to display windows on RoverBeast's screen. So, now I get that dodedechedron
+window up on the right computer. 
+</p>
+
+<p>
+The last thing we do in this section is to enable ftp (file transfer protocol) between our two machines.
+As you may have guessed already, we have to install an ftp daemon on both machines. On Ubuntu,
+Though the server daemon is called vsftpd, the command to use is still ftp.
+ Now, if I do "ftp BigBeast" from RoverBeast, I can log in to BigBeast and I see an ftp prompt
+in the terminal.
+Do the same on your network, and ftp to the other (or another) machine on the network, and type
+ "help" at the ftp prompt. You will see commands like put, mput, get, mget and so on.
+Do "help mget" and it tells you that mget can pull across multiple files. With my two machines,
+ I can use commands like cd, pwd, ls, and so forth to navigate around BigBeast.
+Suppose you want to get a load of text files with a ".txt" extension. from another machine. 
+Use ftp OtherMachine (say) and use the navigation commands to get to where the text files are.
+Then (at the ftp prompt) do "mget *.txt" to copy all the files with a ".txt"
+extension in that directory over onto RoverBeast. 
+</p>
+<p>
+So now we have terminal based communication
+ between the two machines vi telnet, or ssh, or ssh -X, and file transfer to and fro using ftp.
+Well, it's a start...
+</p>
+
+<h1>  Samba File Sharing and Printer Network </h1>
+<p>
+From the first of the "Useful links" below, "Samba (http://www.samba.org) is software that allows non-Windows computers to act like Windows computers on a network by implementing Windows file and printer sharing protocols".  Samba enables us to share files across machines in a network. It's attractiveness is that it's "cross platform". Which means for instance, that we can share files between linux and MS windows.
+It is based on SMB (Server Message Block) and CIFS (Common Internet File System) whatever they happen to be. 
+</p>
+
+<p>
+So, I shall start on my desktop machine (BigBeast) running linux. I shall suppose I want to share some
+ artwork stored in a directory called "backgrounds". If I right click on this directory in the file
+manager, I see "sharing options". If I tick "share this folder" it tells me I "Sharing Service Not Installed"
+and gives me the option to install samba. Let's go for it? Along the way, it asks if I want "libpam-smbpass"
+and I say yes. Then I say yes to "restart session" (this doesn't restart the computer).
+I  have just installed samba. We now have (as terminal commands)  eventlogadm, mksmbpasswd, nmbd, pdbedit, profiles, smbcontrol, smbd, smbstatus, smbstatus.samba3. Now I can right click on backgrounds, go to share 
+options, and click on "create share". Over on my laptop (RoverBeast running linux), I have the directory "mybackgrounds". I do the same thing so samba and libpam-smbpass are installed there too. 
+On both machines, I had the option of allowing others to create and delete files in the shared directory,
+and on both machines I noticed a warning that the share name was too long. For the moment, I have not allowed
+ creating or deleting files. On both machines I install samba-config-samba (a GUI for the GNOME desktop).
+</p>
+<p>
+So, the burning question of the day is, can I share files between the two linux machines?
+The first thing to do is launch that GUI. I go through to the add symbol for files and add backgrounds.
+(Yes, I thought it would be there already too.) Once it is there in the list of shares, you can highlit
+it, click on files again, and choose properties. Here, you can modify the description of the share,
+ make the share writable (or not), and visible (or not). This was under "Basic". Under "Access"
+ I can either allow certain users to have access, or I can allow access to everyone. I shall 
+choose the latter for the momement, and make the share writable. This is on both machines.
+To add a password for a user I could use (as root) smbpasswd -a username, and then
+(as root) /etc/init.d/samba reload, but I can set user passwords using the GUI.
+Just for the tryout I use the rather stupid password "sambapass". The "help" in the GUI isn't bad!
+</p>
+<h1> Useful Links </h1>
+<p> <ul>
+<li> <a href="http://www.tldp.org/HOWTO/Debian-and-Windows-Shared-Printing/getting_started.html">
+  Linux and MS Windows Shared Printing </a></li>
+<li> <a href="http://www.samba.org/samba/docs/man/Samba-HOWTO-Collection/diagnosis.html"> Samba Checklist: Trouble Shooting </a></li>
+</ul></p>
+<!--
+<p>
+Installed Stuff
+1. gnome-control-center network
+2. nm-connection-editor (part of 3?)  libnm-util2 libnm-gtk libnm-glib4
+                                      libnm-glib-vpn1 libnm-gtk-vommon
+3. NetworkManager (network-manager network-manager-pptp   network-manager-pptp-gnome)
+4. smb4k
+samba  GADMIN-SAMBA
+5. openssh-server
+6. rdesktop
+7. tcpdump
+8. samba
+9. gnome panel
+10  iw
+glib-networking-common glib-networking glib-networking-services
+libqt4-network
+ifupdown
+
+
+
+        On some hardware (e-g HP nx6320), you need to power-off/power-on the machine after enabling virtualization in the BIOS.
+        Enabling some BIOS features may break VT support on some hardware (e-g Enabling Intel AMT on a Thinkpad T500 will prevent kvm-intel
+        from loading with "disabled by bios")
+        On some Dell hardware, you also need to disable "Trusted Execution", otherwise VT will not be enabled.
+</p>
+
+
+[global]
+	netbios name = SAMBA24
+	server string = Samba file and print server
+	interfaces = 127.0.0.1/8, 192.168.0.0/24
+	bind interfaces only = Yes
+	security = SHARE
+	client schannel = No
+	server schannel = No
+	allow trusted domains = No
+	obey pam restrictions = Yes
+	passwd program = /usr/bin/passwd '%u'
+	passwd chat = *New*password* %n\n *ReType*new*password* %n\n *passwd*changed*\n
+	passwd chat timeout = 120
+	password level = 6
+	username level = 6
+	unix password sync = Yes
+	log file = /var/log/samba/samba.log
+	max log size = 1000
+	name resolve order = wins lmhosts bcast
+	client signing = No
+	client use spnego = No
+	socket options = TCP_NODELAY SO_RCVBUF=8192 SO_SNDBUF=8192
+	printcap name = cups
+	machine password timeout = 120
+	add user script = /usr/sbin/useradd -d /dev/null -c 'Samba User Account' -s /dev/null '%u'
+	delete user script = /usr/sbin/userdel '%u'
+	add group script = /usr/sbin/groupadd '%g'
+	delete group script = /usr/sbin/groupdel '%g'
+	add user to group script = /usr/sbin/useradd -d /dev/null -c 'Samba User Account' -s /dev/null -g '%g' '%u'
+	delete user from group script = /usr/sbin/userdel '%u' '%g'
+	add machine script = /usr/sbin/useradd -d /dev/null -g sambamachines -c 'Samba Machine Account' -s /dev/null -M '%u'
+	logon script = %G.bat
+	logon path = \\%L\profiles\%u
+	logon drive = m:
+	logon home = \\%L\homes\%u
+	os level = 33
+	local master = No
+	domain master = No
+	dns proxy = No
+	remote announce = 192.168.0.255
+	remote browse sync = 192.168.0.255
+	template shell = /dev/null
+	winbind separator = @
+	winbind cache time = 360
+	winbind use default domain = Yes
+	winbind trusted domains only = Yes
+	winbind nested groups = No
+	winbind nss info = no
+	idmap config * : range = 16777216-33554431
+	idmap config * : backend = tdb
+	hosts allow = 127., 192.168.0.
+	cups options = raw
+	follow symlinks = No
+
+[homes]
+	comment = Home Directories
+	path = /home
+	valid users = %U
+	read only = No
+	locking = No
+	strict locking = No
+
+[netlogon]
+	comment = Network Logon Service
+	path = /var/lib/samba/netlogon
+	read only = No
+	locking = No
+	strict locking = No
+
+[profiles]
+	comment = User Profiles
+	path = /var/lib/samba/profiles
+	read only = No
+	create mask = 0600
+	directory mask = 0700
+	locking = No
+	strict locking = No
+
+[printers]
+	comment = All Printers
+	path = /var/spool/samba
+	printable = Yes
+	print ok = Yes
+	browseable = No
+	locking = No
+	strict locking = No
+
+[pdf-documents]
+	comment = Converted PDF Documents
+	path = /var/lib/samba/pdf-documents
+	admin users = %U
+	read only = No
+	guest ok = Yes
+	locking = No
+	strict locking = No
+
+[pdf-printer]
+	comment = PDF Printer Service
+	path = /tmp
+	guest ok = Yes
+	printable = Yes
+	print ok = Yes
+	printing = bsd
+	print command = /usr/bin/gadmin-samba-pdf %s %u
+	lpq command = 
+	use client driver = Yes
+
+[sysvol]
+	path = /var/lib/samba/sysvol
+	read only = No
+
+[backgrounds]
+	comment = wallpapers
+	path = /home/daddio/backgrounds
+	read only = No
+	guest ok = Yes
+
+
+sudo apte get install nmap
+nmap -sP 192.168.1.0/24
+
+install network-tools
+
+
+What happens? Sees Xoom, laptop, itself, and hub
+
+Starting Nmap 6.00 ( http://nmap.org ) at 2013-09-15 09:25 BST
+Nmap scan report for 192.168.1.64
+Host is up (0.000093s latency).
+Nmap scan report for 192.168.1.68
+Host is up (0.57s latency).
+Nmap scan report for 192.168.1.69
+Host is up (0.080s latency).
+Nmap scan report for BTHomeHub.home (192.168.1.254)
+Host is up (0.0012s latency).
+Nmap done: 256 IP addresses (4 hosts up) scanned in 27.01 seconds
+daddio@BigBeast:~$ 
+
+
+
+daddio@BigBeast:~$ sudo  netstat -tunap | grep smb
+[sudo] password for daddio: 
+tcp        0      0 127.0.0.1:445           0.0.0.0:*               LISTEN      1220/smbd       
+tcp        0      0 127.0.0.1:139           0.0.0.0:*               LISTEN      1220/smbd       
+
+
+
+
+ALSO use nm-tool
+
+
+/usr/share/applications/ nautilus desktop file added (to get places in the menu)
+-->
+
+<h2>  Changes </h2>
+<p>
+This was uploaded in Sept 2013.
+</p>
+
+</body>
+</html>
+ 
+
