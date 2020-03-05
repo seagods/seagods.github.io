@@ -1,0 +1,122 @@
+<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta name=Description" content="Chris Godsalve's home pages">
+<title> Chris Godsalve's Home Pages </title>
+
+<style type="text/css">
+@import url(cochise.css);
+</style>
+
+</head>
+<!-- Background white, links blue (unvisited), navy (visited), red
+(active) -->
+<body>
+
+<h1> Chris Godsalve's Home Pages</h1>
+
+<p>Useful Links to Other Sites </p>
+<ul>
+<li> <a HREF="RSENVLINKS.html"> Environment, Science, and Remote Sensing Links (Udated April 2014)</a></li>
+<li> <a HREF="CompLinks.html"> Mathematical and Geometrical Software</a></li>
+</ul>
+
+
+<h1> Computing </h1>
+<ul>
+<li><a href="Android_XOOM.html"> Turning an Android Tablet into a Real Computer</a></li>
+<li><a href="linux.html">Migrating to Linux </a></li>
+<li><a href="CPP.html">Getting Started With C++</a></li>
+<li><a href="Perl.html">Getting Started With Perl</a></li>
+<li><a href="OpenGL.html">Getting Started With OpenGL and SDL</a></li>
+<li><a href="Compilers.html"> Free (personal use) Compilers for MS windows </a> </li>
+</ul>
+
+<h1> My  Mathematics and Physics Articles </h1>
+<p>
+<ul>
+<li> <a href="MathSchool.html"> Maths School</a> </li>
+<li> <a href="GradMaths.html"> Undergrad Maths and Beyond</li>
+<li> <a href="CompMaths.html"> Computational Maths</a> </li>
+<li> <a href="Physics.html"> Mathematical and Environmental Physics</a> </li></a> </li>
+</ul>
+</p>
+
+<h1> My Downloadable Computer Codes </h1>
+<p>
+<ul>
+<li> <a href="Codes.html"> Downloadable Computer Programmes</a> </li>
+<li> <a href="CompArt.html"> Some Documentation for the PlotFiles etc</a>. </li>
+</ul>
+</p>
+
+<h1> Video Tutorials </h1>
+<p>
+For non MS windows people, and MS windows people inexperienced in programming, I have an introductory video series (Series 1) at youtube, with a follow on series
+2 which looks at how to setup a lot of scientific computing stuff on MS windows (including graphics). Series 1
+starts with very basic windows, covers installing and using compilers (especially GCC --- the Gnu Compiler Collection) and installing useful things with MSYS2 and 
+mingw-w64. You will, for instance, be able to download and build fortran libraries and mix programming languages.. Note the emphasis is on "building programs" rather 
+than writing them. (No programing language tutorials here.)  In Series 2, I get down to business with the installation of important mathematics and graphics libraries.
+
+</p>
+
+<p>
+Series 1 is at <a href="https://www.youtube.com/playlist?list=PLstgcQGSENrrlMnL19U0vi4rChN5mJFCF"> Building Programs and Libraries on MS Windows</a> and the
+follow on Series 2 is at 
+<a href="https://www.youtube.com/playlist?list=PLstgcQGSENroAfXYhKG0cQNgrM4Z6ACQc"> Scientific Computing  on MS Windows</a>.
+</p><p>
+<p> 
+Series 1 contains 14 videos in all, 
+<ul>
+<li>  Video 1: Intro to Building Computer Programs on MS windows </li>
+<li>  Video 2: The Very Basics  of MS windows and the DOS command line </li>
+<li>  Video 3: What is a compiler: the Gnu Compiler Collection (GCC)</li>
+<li>  Video 4: GCC for windows. Download Msys2 and Mingw-64 and MSYS2</li>
+<li>  Video 5: Building "Hello Worlds" in Fortran (Many numerical libraries available in Fortran) </li>
+<li>  Video 6: Building programs from separately compiled objects </li>
+<li>  Video 7: Makefiles, build static and dymamic libraries </li>
+<li>  Video 8: More on Makefiles and building programs </li>
+<li>  Video 9: Static and Dynamic libraries, export from DLLs </li>
+<li>  Video 10: Local and Global variables, getting data in and out of functions </li>
+<li>  Video 11: Combination of MS windows, gfortran, COMMON blocks. and DLLs... A Problem! </li>
+<li>  Video 12: Calling Fortran from C/C++, structs and COMMON blocks, DLL problem cured! </li>
+<li>  Video 13: Free IDEs under windows, gfortran built libraries called by MS Vis C++ in MS Vis Studio </li>
+<li>  Video 14: Free usage of some commercial compilers.
+</ul>
+</p>
+<p>
+Then there is series 2, in which we do some heavy duty setting up on MS windows,  
+<ul>  Video 1: Down to business, install imprtant libraries </li>
+<li>  Video 2: BLAS and LAPACK for linear algebra and eigenproblems </li>
+<li>  Video 3: TOMS and SLATEC general scientific libraries  </li>
+<li>  Video 4: OpenGL for graphics, install freeglut </li>
+<li>  Video 5: run unix configure scripts! Install freetype2, SDL, and more </li>
+<li>  Video 6: A Tour of the Plot Files, my OpenGL scientific graphics </li>
+<li>  Video 7: More Plot Files, including visualising w=F(x,y,z) </li>
+<li>  Video 8: Flight! A sort of game and a 2D triangular Finite Element Mesh </li>
+<li>  Video 9: Review of Series 2, and a bit about GIT </li>
+</ul> 
+
+
+<h1> Family</h1>
+<p> <a href="family.html"> Some Personal and Family things </p>
+<h1> Some "Art work"</h1>
+<p> <a href="ArtWork.html"> MyPaintings and Drawings Over the Years!</p>
+<!--
+<p> <a href="http://www.facebook.com/#!/chris.godsalve"> Facebook stuff</p>
+-->
+<p> <blockquote>Please feel free to  contact me at seagods@hotmail.com.
+</blockquote> </p>
+
+<p> <blockquote>These pages were  rr-created in February 2017 </blockquote> </p>
+
+
+</body>
+</html>
+
+
+ 
+

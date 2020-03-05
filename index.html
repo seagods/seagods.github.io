@@ -4,8 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
-<meta name=Description" content="Chris Godsalve's home pages">
-<title> Chris Godsalve's Home Pages </title>
+<meta name=Description" content="Chris Godsalve's Code at GitHub">
+<title> Chris Godsalve's Code at GitHub </title>
 
 <style type="text/css">
 @import url(cochise.css);
@@ -16,51 +16,131 @@
 (active) -->
 <body>
 
-<h1> Chris Godsalve's Home Pages</h1>
+<h1> Chris Godsalve's Code at GitHub</h1>
 
-<p>Useful Links to Other Sites </p>
+<p> These pages are here to describe and document my code at github, I also have some 
+ here <a HREF="https://seagods/seagods.bitbucket.io">  personal home pages</a> over
+at bitbucker.org.
+The projects here are a mix of mature ready to use code, works in progess, and `stubs'.
+They projects are
 <ul>
-<li> <a HREF="RSENVLINKS.html"> Environment, Science, and Remote Sensing Links (Udated April 2014)</a></li>
-<li> <a HREF="CompLinks.html"> Mathematical and Geometrical Software</a></li>
+<li> MieOhMy.git - Electromagnetic Scattering  on Spheres via Mie Theory </li>
+<li> SphereTree.git - Quadtrees on a Sphere </li>
+<li> PlotFiles.git -  (Linux) OpenGL Graphics forRepresenting Data </li>
+<li> PlotFilesMSwin.git - Microsoft Windows Version of PlotFiles </li>
+<li> Games.git - A `flight simulator' over a fractal landscape </li>
+<li> XFiles.git - A Collection of my `header' files for PlotFiles</li>
+<li> bitmaps.git - A Collection of bitmaps for PlotFiles </li>
+<li> HeadersForPlot.git - Other `header' files for PlotFiles</li>
+<li> MyLib.git - Analytical Solvers for 3 by 3 and 4 by 4 Eigenvalue/Eigenvector
+  problems (also cubic and quartic equation solvers)</li>
+<li> The-DORS.git - Atmospheric Radiation using the 1D Radiative Transfer Equation</li>
+<li> myContinuedFracs.git - Continued Fractions</li>
+<li> Geodesy.git - Geodesic Propagations on Curved Surfaces Approximated by Triangular Meshes</li>
+<li> Geom.git - Platonic Solids </li>
 </ul>
-
-
-<h1> Computing </h1>
-<ul>
-<li><a href="Android_XOOM.html"> Turning an Android Tablet into a Real Computer</a></li>
-<li><a href="linux.html">Migrating to Linux </a></li>
-<li><a href="CPP.html">Getting Started With C++</a></li>
-<li><a href="Perl.html">Getting Started With Perl</a></li>
-<li><a href="OpenGL.html">Getting Started With OpenGL and SDL</a></li>
-<li><a href="Compilers.html"> Free (personal use) Compilers for MS windows </a> </li>
-</ul>
-
-<h1> My  Mathematics and Physics Articles </h1>
 <p>
-<ul>
-<li> <a href="MathSchool.html"> Maths School</a> </li>
-<li> <a href="GradMaths.html"> Undergrad Maths and Beyond</li>
-<li> <a href="CompMaths.html"> Computational Maths</a> </li>
-<li> <a href="Physics.html"> Mathematical and Environmental Physics</a> </li></a> </li>
-</ul>
+These projects (along with their current status) are described below.
+To try out any of these, just run "git clone https://github.com/seagods/X.git" at a terminal, where X=MieOhMy, SphereTree, etc.
 </p>
 
-<h1> My Downloadable Computer Codes </h1>
+
+<h1>Operating Systems</h1>
 <p>
-<ul>
-<li> <a href="Codes.html"> Downloadable Computer Programmes</a> </li>
-<li> <a href="CompArt.html"> Some Documentation for the PlotFiles etc</a>. </li>
-</ul>
+Some of the code is written in C or C++, and some is written in fortran. Some of the code uses OpenGL graphics.
+None of this should be a problem on Linux/Unix (and I believe Apple Mac) machines. I would recommend the gnu-compiler
+collection for building these projects. Microsoft users will need to install Msys2 and MinGW-w64.
+I refer them to the Video Tutorial section further down. The openGL routines currently use SDL1, freetype-2 fonts for axis
+labels, numbers, and so on, and also OGLft. The latter is an Open GL Freetype library. At some point I should like to
+convert them to use SDL2 with SDL2-ttf, but this is not a priority.
 </p>
+
+
+
+
+<h1>MieOhMy </h1>
+<p>
+Mie Theory is used to compute the scattering of a plane electromagnetic wave from a sphere. The basic solution is
+an expansion using Mie's pi and tau functions. To obtain the solution in `the-lab reference frame' we compute Spherical Harmonics
+coefficients from the Mie Coefficients using formulae developed by J.V. Dave. Scattering from many particles with a statistically
+described particle size distribution is also computed. The theory is given in some detail in documentation contained in the
+Theory directory. This is a mature project.
+</p>
+
+<h1> SphereTree </h1>
+<p>
+Dutton, and later GoodChild and Yang have published papers for generating quadtrees on spheres. The result is
+a set of increasingly fine triangulations of a sphere. They are based on recursive subdivions of a regular Octahedron or
+a regular Icosahedron. The linux part of the project is mature, however I am currently adapting the project
+so that it can be used by microsoft windows.
+</p>
+
+<h1> PlotFiles and PlotFilesMSwin </h1>
+<p>
+The PlotFiles start with 2D plots of y=f(x). Then space-curves r=(x(t),y(t),z(t)), surfaces z=f(x,y), and 
+ nested surfaces to represent w=f(x,y,z). We include contour plots with world maps. A 3D-tetrahedral mesh viewer, and
+a PlotGlobe to view a rotating planet Earth.
+</p>
+<p>
+ The PlotFilesMSwin are 
+the same thing, but for use by Microsoft Windows users. I hope to adding some more routines, such as 
+ plotting f(theta,phi) on a sphere at some point. So the project is mature in a sense, though I will merge the
+MSwin into the PlotFiles at some point, and they shall be added to. Sometimes things will be `work-in-progress'.
+The Xfiles, HeadersFor Plot and bitmaps required by the the PlotFiles are kept in separate git projects.
+</p>
+
+<h1> Games </h1>
+<p>
+The only thing here is a `game' called flight. I generate a landscape using the recursive subdivision idea
+of Mandelbrot, you can fly about in it. The only object of the game is to avoid crashing. It is
+also a 2D triangular mesh viewer, and belongs in the PlotFiles. (GamesMSwin is in PlotFilesMSwin)
+</p>
+
+
+<h1> MyLib </h1>
+<p>
+I have used analytical solutions of cubic and Quartic equations to write this set of polynomial solvers, and eigenproblem
+solvers. I have included a Gaussian elemination routine used for collision detection in my openGL graphics
+</p>
+
+
+<h1> myContinedFracs </h1>
+<p>
+Not many people know about these, so far there is just some documentation to explain what they are, and the very begining of
+a continued fractions library. Very much a `work in Progress'.
+</p>
+
+
+<h1> The-DORS</h1>
+<p>
+The DORS is anan acronym - a Discrete Ordinates Radiative-transfer Solver.
+I've been stalled for a long time, but I am improving and adapting my atmospheric radiation code. 
+At the moment, I justt have some programs to `build an atmosphere'. Very much a `work in Progress'.
+</p>
+
+
+
+
+<h1> Geodesy </h1>
+<p>
+I have used a triangulation generated by SphereTree to demonstrate Geodesic propagation on a sphere.
+</p>
+
+
+<h1> Geom </h1>
+<p>
+Viewers for the Icosahedron, Dodecahedron, and Truncated Icosahedron (or bucky-ball)
+</p>
+
+
 
 <h1> Video Tutorials </h1>
 <p>
 For non MS windows people, and MS windows people inexperienced in programming, I have an introductory video series (Series 1) at youtube, with a follow on series
 2 which looks at how to setup a lot of scientific computing stuff on MS windows (including graphics). Series 1
 starts with very basic windows, covers installing and using compilers (especially GCC --- the Gnu Compiler Collection) and installing useful things with MSYS2 and 
-mingw-w64. You will, for instance, be able to download and build fortran libraries and mix programming languages.. Note the emphasis is on "building programs" rather 
+mingw-w64. You will, for instance, be able to download and build fortran libraries and mix programming languages. Note the emphasis is on "building programs" rather 
 than writing them. (No programing language tutorials here.)  In Series 2, I get down to business with the installation of important mathematics and graphics libraries.
-
 </p>
 
 <p>
@@ -99,20 +179,6 @@ Then there is series 2, in which we do some heavy duty setting up on MS windows,
 <li>  Video 8: Flight! A sort of game and a 2D triangular Finite Element Mesh </li>
 <li>  Video 9: Review of Series 2, and a bit about GIT </li>
 </ul> 
-
-
-<h1> Family</h1>
-<p> <a href="family.html"> Some Personal and Family things </p>
-<h1> Some "Art work"</h1>
-<p> <a href="ArtWork.html"> MyPaintings and Drawings Over the Years!</p>
-<!--
-<p> <a href="http://www.facebook.com/#!/chris.godsalve"> Facebook stuff</p>
--->
-<p> <blockquote>Please feel free to  contact me at seagods@hotmail.com.
-</blockquote> </p>
-
-<p> <blockquote>These pages were  rr-created in February 2017 </blockquote> </p>
-
 
 </body>
 </html>
